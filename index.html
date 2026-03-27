@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modernisierung Papiermaschine – Executive Projektdeck</title>
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --bg-elevated: #ffffff;
+      --surface: #ffffff;
+      --surface-2: #f7f8fa;
+      --text: #14171b;
+      --text-muted: #6d7380;
+      --line: rgba(20, 23, 27, 0.10);
+      --line-strong: rgba(20, 23, 27, 0.18);
+      --accent: #3d4b59;
+      --accent-soft: rgba(61, 75, 89, 0.12);
+      --overlay-surface: rgba(255,255,255,.84);
+      --overlay-line: rgba(20,23,27,.16);
+      --ink-soft: #202832;
+      --ink-mid: #5f6876;
+      --hotspot-core: #2f3a47;
+      --hotspot-outline: rgba(255,255,255,.8);
+      --hotspot-active: #1f2a34;
+      --hero-grad-1: #ffffff;
+      --hero-grad-2: #f8f9fb;
+      --hero-grad-3: #edf1f5;
+      --shadow-soft: 0 18px 50px rgba(15, 18, 24, 0.08);
+      --shadow-card: 0 10px 30px rgba(15, 18, 24, 0.08);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --maxw: 1320px;
+      --nav-h: 70px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% -20%, var(--bg-elevated) 0%, var(--bg) 42%, transparent 70%),
+        linear-gradient(180deg, var(--bg) 0%, var(--surface-2) 100%);
+      line-height: 1.52;
+      letter-spacing: 0.01em;
+    }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      z-index: 140;
+      pointer-events: none;
+      background: transparent;
+    }
+
+    .scroll-progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), #5d7784);
+      transition: width .12s linear;
+    }
+
+    a { color: inherit; }
+
+    .container {
+      width: min(var(--maxw), 92vw);
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 98px 0;
+      scroll-margin-top: calc(var(--nav-h) + 20px);
+    }
+
+    section:nth-of-type(even) {
+      background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0.08));
+    }
+
+    .eyebrow {
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    h1, h2, h3, h4 { margin: 0; line-height: 1.14; }
+
+    h1 {
+      font-size: clamp(2.35rem, 4.5vw, 4.65rem);
+      font-weight: 590;
+      letter-spacing: -0.03em;
+      max-width: 16ch;
+    }
+
+    h2 {
+      font-size: clamp(1.55rem, 2.4vw, 2.55rem);
+      font-weight: 560;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: clamp(1.08rem, 1.6vw, 1.36rem);
+      font-weight: 540;
+      letter-spacing: -0.01em;
+    }
+
+    p { margin: 0; color: var(--text-muted); }
+
+    .lede {
+      max-width: 70ch;
+      font-size: clamp(1.02rem, 1.15vw, 1.18rem);
+    }
+
+    .top-nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--bg) 86%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .top-nav {
+      min-height: var(--nav-h);
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      font-weight: 560;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 6px 0;
+      scrollbar-width: thin;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 0 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.86rem;
+      white-space: nowrap;
+      transition: all .22s ease;
+    }
+
+    .nav-link:hover { border-color: var(--line-strong); background: color-mix(in srgb, var(--surface) 68%, transparent); color: var(--text); }
+    .nav-link.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .nav-link.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .nav-link:focus-visible,
+    .tab-btn:focus-visible,
+    .chip-btn:focus-visible,
+    button:focus-visible {
+      outline: 2px solid #343846;
+      outline-offset: 2px;
+    }
+
+    .nav-tools { display: flex; align-items: center; gap: 10px; }
+
+    .theme-toggle {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface) 70%, transparent);
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .theme-btn {
+      border: 0;
+      border-radius: 999px;
+      min-height: 30px;
+      padding: 0 11px;
+      font-size: .74rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .theme-btn[aria-pressed=\"true\"] {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .hero {
+      padding-top: 54px;
+      padding-bottom: 70px;
+    }
+
+    .hero-shell {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(160deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 58%, var(--hero-grad-3) 100%);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(30px, 5vw, 62px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-shell::after {
+      content: "";
+      position: absolute;
+      width: 540px;
+      height: 540px;
+      right: -220px;
+      top: -220px;
+      background: radial-gradient(circle, rgba(34, 36, 44, 0.08) 0%, rgba(34, 36, 44, 0) 68%);
+      pointer-events: none;
+    }
+    .hero-shell::before {
+      content: "";
+      position: absolute;
+      inset: -20% auto auto -18%;
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, var(--accent-soft) 0%, rgba(63,88,102,0) 72%);
+      pointer-events: none;
+    }
+
+    .status-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 36px;
+      margin-bottom: 20px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      color: color-mix(in srgb, var(--text) 85%, var(--accent));
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 36px;
+      align-items: end;
+    }
+
+    .hero-kpis {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero-kpi {
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 122px;
+      display: grid;
+      align-content: space-between;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .hero-kpi.primary {
+      grid-column: span 2;
+      min-height: 140px;
+      border-color: var(--line-strong);
+      background: linear-gradient(160deg, var(--surface), var(--surface-2));
+      box-shadow: 0 0 0 1px var(--accent-soft), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .kpi-label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .kpi-value {
+      color: var(--text);
+      font-size: clamp(1.2rem, 2vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 26px;
+    }
+
+    .card + .card { margin-top: 14px; }
+
+    .summary-grid {
+      margin-top: 20px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .summary-tile {
+      border: 1px solid #dbdde2;
+      border-radius: 16px;
+      padding: 16px;
+      background: linear-gradient(165deg, #fdfdfd, #f5f5f5);
+      display: grid;
+      gap: 10px;
+      min-height: 156px;
+      transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+      cursor: pointer;
+    }
+    .summary-tile:hover { transform: translateY(-2px); border-color: rgba(63,88,102,.4); box-shadow: 0 8px 18px rgba(0,0,0,.08); }
+
+    .tile-prio {
+      width: fit-content;
+      border: 1px solid #c8cad1;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: #595d66;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-color: rgba(63, 88, 102, 0.38);
+    }
+
+    .tile-title { font-size: 1.02rem; color: #171a21; font-weight: 560; }
+    .tile-copy { font-size: 0.9rem; color: #4e515a; }
+
+    .visual-stage {
+      margin-top: 18px;
+      border-radius: 24px;
+      border: 1px solid #d9dce2;
+      overflow: hidden;
+      background: #f2f3f5;
+      min-height: 600px;
+      position: relative;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .tab-row {
+      display: inline-flex;
+      gap: 6px;
+      border: 1px solid #d4d7de;
+      border-radius: 999px;
+      padding: 5px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(6px);
+      margin-top: 12px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: #4f525c;
+      border-radius: 999px;
+      min-height: 38px;
+      padding: 0 16px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .tab-btn:hover { background: rgba(36, 38, 47, 0.08); color: #1a1d24; }
+    .tab-btn.active { background: #1f2027; color: #fff; }
+    .tab-btn.active { background: var(--accent); color: #fff; }
+
+    .visual-panel {
+      display: none;
+      min-height: inherit;
+      position: relative;
+    }
+
+    .visual-panel.active { display: block; }
+
+    .visual-image-wrap { position: relative; background: #eceef1; height: 100%; }
+    .visual-image-wrap.hotspot-stage { overflow: hidden; }
+
+    .pm-viewport {
+      position: relative;
+      width: 100%;
+      height: 580px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      scroll-behavior: smooth;
+      border-radius: 18px;
+    }
+
+    .pm-viewport::-webkit-scrollbar { height: 8px; }
+    .pm-viewport::-webkit-scrollbar-thumb { background: rgba(70,80,90,.35); border-radius: 999px; }
+
+    .pm-canvas {
+      position: relative;
+      height: 100%;
+      width: max(1900px, 165vw);
+      min-width: 1600px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .visual-image-wrap img {
+      display: block;
+      width: auto;
+      height: 100%;
+      max-width: none;
+      padding: 0;
+      transition: transform .45s ease;
+    }
+    .visual-panel:hover .visual-image-wrap img { transform: none; }
+
+    .visual-caption {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      background: rgba(24, 30, 37, 0.85);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .overlay-stack {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: min(330px, 36vw);
+      display: grid;
+      gap: 10px;
+      z-index: 5;
+    }
+
+    .overlay-left {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: min(360px, 42vw);
+      z-index: 5;
+    }
+
+    .side-block {
+      border: 1px solid #d7dae0;
+      border-radius: 14px;
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(8px);
+      padding: 12px;
+      box-shadow: 0 10px 24px rgba(8,10,14,.08);
+    }
+
+    .side-block h4 {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .side-block p { font-size: 0.9rem; color: var(--text-muted); }
+
+    .placeholder-card {
+      height: 100%;
+      display: grid;
+      align-content: center;
+      justify-items: start;
+      gap: 10px;
+      padding: 40px;
+      background:
+        linear-gradient(135deg, #f9fafb 0%, #f2f4f6 100%),
+        repeating-linear-gradient(135deg, rgba(66, 70, 80, .05) 0, rgba(66, 70, 80, .05) 16px, rgba(255, 255, 255, 0) 16px, rgba(255, 255, 255, 0) 30px);
+      border: 1px dashed #cdd2db;
+      margin: 18px;
+      border-radius: 18px;
+    }
+
+    .placeholder-card strong { font-size: 1.08rem; color: #21242d; }
+    .placeholder-card p { max-width: 34ch; }
+
+    .hotspot-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hotspot-btn {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 1px solid var(--hotspot-outline);
+      background: var(--hotspot-core);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--hotspot-outline) 48%, transparent), 0 0 0 1px rgba(0,0,0,.2);
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .hotspot-btn:hover,
+    .hotspot-btn:focus-visible { transform: translate(-50%, -50%) scale(1.1); }
+
+    .hotspot-btn.active {
+      background: var(--hotspot-active);
+      box-shadow: 0 0 0 4px var(--accent-soft), 0 0 0 1px rgba(0,0,0,.25);
+    }
+
+    .hotspot-label {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: color-mix(in srgb, var(--surface-2) 72%, #000 28%);
+      color: #fff;
+      font-size: .66rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+      white-space: nowrap;
+    }
+    .hotspot-btn:hover .hotspot-label,
+    .hotspot-btn.active .hotspot-label { opacity: 1; }
+
+    .hotspot-note {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      font-size: .7rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #445261;
+      border: 1px solid #cfd5dd;
+      border-radius: 999px;
+      background: rgba(255,255,255,.74);
+      padding: 4px 8px;
+      z-index: 6;
+    }
+
+    .pm-controls {
+      position: absolute;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      display: inline-flex;
+      gap: 8px;
+      z-index: 6;
+      background: rgba(255,255,255,.72);
+      border: 1px solid #cfd5dd;
+      border-radius: 999px;
+      padding: 6px;
+      backdrop-filter: blur(8px);
+    }
+    .pm-control-btn {
+      border: 0;
+      border-radius: 999px;
+      min-height: 30px;
+      padding: 0 10px;
+      background: transparent;
+      color: #324150;
+      font-size: .78rem;
+      cursor: pointer;
+    }
+    .pm-control-btn:hover { background: rgba(63,88,102,.14); }
+    .pm-progress {
+      position: absolute;
+      left: 16px;
+      bottom: 18px;
+      width: 180px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(44,53,62,.18);
+      overflow: hidden;
+      z-index: 6;
+    }
+    .pm-progress span { display:block; height:100%; width:0; background: var(--accent); }
+
+    .motor-card { display: grid; gap: 10px; }
+    .motor-kv { border: 1px solid var(--line); border-radius: 12px; padding: 10px; background: rgba(255,255,255,.65); }
+    .motor-kv strong { color: var(--text); display: block; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+    .motor-kv span { color: var(--ink-soft); font-size: 1rem; font-weight: 600; }
+
+    .compare-stage {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .chip-row {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #464a54;
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 0 12px;
+      font-size: .78rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .chip-btn[aria-pressed=\"true\"] {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #1f2c34;
+      font-weight: 600;
+    }
+
+    .compare-card {
+      border: 1px solid #d7d9df;
+      border-radius: 20px;
+      background: #ffffff;
+      box-shadow: var(--shadow-card);
+      padding: 20px;
+    }
+    .compare-card:first-child { border-color: #cfd4dc; }
+
+    .compare-card.target {
+      background: linear-gradient(160deg, #fcfcfc 0%, #f4f5f7 100%);
+      border-style: dashed;
+      border-color: rgba(63, 88, 102, 0.4);
+    }
+
+    .compare-group + .compare-group { margin-top: 14px; }
+    .compare-group.hidden {
+      opacity: 0.18;
+      transform: scale(0.995);
+      transition: all .24s ease;
+      pointer-events: none;
+      filter: saturate(0.4);
+    }
+
+    .group-title {
+      font-size: 0.76rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: #666b74;
+      margin-bottom: 8px;
+    }
+
+    .compare-list {
+      border: 1px solid #e0e2e7;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .compare-item {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 14px;
+      padding: 8px 10px;
+      border-bottom: 1px solid #eceef2;
+      font-size: 0.88rem;
+    }
+
+    .compare-item:last-child { border-bottom: 0; }
+
+    .compare-item .key { color: #4f535c; }
+    .compare-item .val { color: #171a21; font-weight: 520; text-align: right; }
+
+    .compare-item.placeholder .val {
+      color: var(--accent);
+      font-style: italic;
+      font-weight: 470;
+    }
+
+    .kpi-stage {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1.1fr .9fr;
+    }
+
+    .production-toggle { margin-top: 12px; }
+
+    .kpi-main,
+    .kpi-sub {
+      border: 1px solid #d7dae0;
+      border-radius: 18px;
+      background: #fff;
+      padding: 18px;
+    }
+
+    .kpi-main-value {
+      font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+      font-weight: 620;
+      letter-spacing: -0.03em;
+      color: #161922;
+      margin-top: 8px;
+      color: var(--accent);
+    }
+
+    .kpi-sub-grid {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kpi-sub-item {
+      border: 1px solid #e0e3e8;
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 90px;
+      display: grid;
+      align-content: space-between;
+      background: #fcfcfc;
+    }
+
+    .kpi-sub-item .label {
+      color: #666a74;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .kpi-sub-item .value {
+      font-size: 1.24rem;
+      color: #1a1d25;
+      font-weight: 560;
+    }
+
+    .split-grid {
+      margin-top: 14px;
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bar-block {
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #eceef2;
+      transition: background .2s ease;
+    }
+    .bar-row:hover { background: rgba(63, 88, 102, .07); }
+
+    .bar-row:last-child { border-bottom: 0; }
+
+    .bar-meta {
+      display: grid;
+      gap: 2px;
+    }
+
+    .bar-label {
+      font-size: 0.9rem;
+      color: #1e2129;
+      font-weight: 540;
+    }
+
+    .bar-rank {
+      font-size: 0.72rem;
+      color: #6a6f79;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .bar-rank.hotspot { color: var(--accent); font-weight: 600; }
+
+    .bar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: #e8eaee;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #23262f, #5d636f);
+    }
+
+    .bar-fill.hotspot {
+      background: linear-gradient(90deg, var(--accent), #293843);
+      box-shadow: 0 0 0 1px rgba(25, 29, 39, .1);
+    }
+
+    .bar-value {
+      text-align: right;
+      font-size: 0.84rem;
+      color: #373b46;
+      min-width: 132px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .section-note {
+      margin-top: 10px;
+      color: #5d616b;
+      font-size: 0.88rem;
+    }
+
+    .spec-compare {
+      margin-top: 14px;
+      border: 1px solid #d9dce3;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .spec-head,
+    .spec-row {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr 1fr;
+    }
+
+    .spec-head {
+      background: #f3f4f6;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #656a74;
+    }
+
+    .spec-head div,
+    .spec-row div { padding: 10px 12px; border-right: 1px solid #e1e4ea; }
+    .spec-head div:last-child,
+    .spec-row div:last-child { border-right: 0; }
+
+    .spec-row {
+      border-top: 1px solid #eceef3;
+      font-size: 0.9rem;
+    }
+
+    .spec-row .key { color: #4b505a; }
+    .spec-row .alt,
+    .spec-row .ap { color: #1c2028; }
+    .spec-row.highlight { background: #f9fafb; }
+    .spec-row.muted { opacity: 0.45; }
+
+    .gap-groups {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gap-group {
+      border: 1px solid #d8dbe2;
+      border-radius: 16px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .gap-group h4 {
+      margin: 0 0 10px;
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #60646f;
+    }
+
+    .gap-list { display: grid; gap: 8px; }
+
+    .gap-item {
+      border: 1px dashed #ccd0d8;
+      border-radius: 12px;
+      background: #fafbfc;
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .gap-item strong { font-size: 0.9rem; color: #1b1f28; }
+
+    .status-pill {
+      width: fit-content;
+      border: 1px solid #c6cad3;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-color: color-mix(in srgb, var(--accent) 36%, transparent);
+      background: var(--accent-soft);
+    }
+
+    .next-steps {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .step {
+      border: 1px solid #d6d9e0;
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .step-index {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid #bac0cc;
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    .step p { font-size: 0.88rem; color: #434854; }
+
+    .footer-space { padding-bottom: 110px; }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(12,16,22,.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-panel {
+      width: min(1300px, 96vw);
+      max-height: 90vh;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0f141a;
+      box-shadow: 0 30px 70px rgba(0,0,0,.55);
+      position: relative;
+    }
+    .lightbox-panel img { width: 100%; height: 100%; max-height: 90vh; object-fit: contain; display: block; padding: 20px; }
+    .lightbox-close {
+      position: absolute;
+      right: 12px; top: 12px;
+      border: 1px solid rgba(255,255,255,.35);
+      background: rgba(0,0,0,.4);
+      color: #fff; border-radius: 999px; width: 34px; height: 34px; cursor: pointer;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0f1217;
+      --bg-elevated: #141922;
+      --surface: #171c24;
+      --surface-2: #1d2330;
+      --text: #e7ecf3;
+      --text-muted: #9aa5b5;
+      --line: rgba(231, 236, 243, 0.10);
+      --line-strong: rgba(231, 236, 243, 0.18);
+      --accent: #5d7187;
+      --accent-soft: rgba(93, 113, 135, 0.18);
+      --overlay-surface: rgba(22, 27, 35, .82);
+      --overlay-line: rgba(231,236,243,.18);
+      --hotspot-core: #2d3946;
+      --hotspot-outline: rgba(227, 234, 242, .82);
+      --hotspot-active: #7d93a7;
+      --hero-grad-1: #171c24;
+      --hero-grad-2: #1c2330;
+      --hero-grad-3: #161d29;
+      --ink-soft: #dde4ed;
+      --ink-mid: #afbccb;
+      --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.32);
+      --shadow-card: 0 14px 38px rgba(0, 0, 0, 0.28);
+    }
+
+    html[data-theme="dark"] body {
+      background:
+        radial-gradient(circle at 10% -18%, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 56%),
+        linear-gradient(180deg, var(--bg) 0%, var(--surface-2) 100%);
+    }
+    html[data-theme="dark"] section:nth-of-type(even) { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); }
+    html[data-theme="dark"] .top-nav-wrap { background: color-mix(in srgb, var(--bg) 80%, transparent); border-bottom-color: var(--line); }
+    html[data-theme="dark"] .nav-link { color: var(--text-muted); }
+    html[data-theme="dark"] .nav-link:hover { border-color: var(--line-strong); background: rgba(255,255,255,.04); color: var(--text); }
+    html[data-theme="dark"] .theme-toggle { background: rgba(0,0,0,.2); border-color: var(--line); }
+    html[data-theme="dark"] .hero-shell,
+    html[data-theme="dark"] .card,
+    html[data-theme="dark"] .compare-card,
+    html[data-theme="dark"] .compare-list,
+    html[data-theme="dark"] .kpi-main,
+    html[data-theme="dark"] .kpi-sub,
+    html[data-theme="dark"] .spec-compare,
+    html[data-theme="dark"] .gap-group,
+    html[data-theme="dark"] .step,
+    html[data-theme="dark"] .side-block { background: var(--surface); border-color: var(--line); }
+    html[data-theme="dark"] .hero-kpi,
+    html[data-theme="dark"] .kpi-sub-item,
+    html[data-theme="dark"] .summary-tile { background: color-mix(in srgb, var(--surface-2) 76%, var(--surface)); border-color: var(--line); }
+    html[data-theme="dark"] .visual-stage { background: var(--surface-2); border-color: var(--line-strong); }
+    html[data-theme="dark"] .placeholder-card { background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%); border-color: var(--line-strong); }
+    html[data-theme="dark"] .hotspot-note { background: color-mix(in srgb, var(--surface-2) 80%, transparent); border-color: var(--line-strong); color: var(--text-muted); }
+    html[data-theme="dark"] .hotspot-btn { border-color: #dfe8ef; box-shadow: 0 0 0 4px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.15); }
+    html[data-theme="dark"] .hotspot-btn.active { background: var(--hotspot-active); box-shadow: 0 0 0 6px var(--accent-soft), 0 0 0 1px rgba(255,255,255,.1); }
+    html[data-theme="dark"] .motor-kv { background: color-mix(in srgb, var(--surface-2) 70%, transparent); border-color: var(--line); }
+    html[data-theme="dark"] .side-block { background: var(--overlay-surface); border-color: var(--overlay-line); box-shadow: 0 10px 24px rgba(0,0,0,.35); }
+    html[data-theme="dark"] .pm-controls { background: color-mix(in srgb, var(--surface) 72%, transparent); border-color: var(--line); }
+    html[data-theme="dark"] .pm-control-btn { color: var(--text); }
+    html[data-theme="dark"] .pm-progress { background: rgba(142, 165, 181, .22); }
+    html[data-theme="dark"] .tab-row { background: rgba(0,0,0,.25); border-color: #3b4753; }
+    html[data-theme="dark"] .tab-btn { color: #aab6c2; }
+    html[data-theme="dark"] .chip-btn { background: #222a32; color: #c5d0d9; border-color: #3b4753; }
+    html[data-theme="dark"] .bar-track { background: #2a333d; }
+    html[data-theme="dark"] .bar-row { border-color: #333f4b; }
+    html[data-theme="dark"] .spec-head { background: #222b34; color: #aebac5; }
+    html[data-theme="dark"] .spec-row.highlight { background: #202932; }
+    html[data-theme="dark"] .gap-item { background: #202932; border-color: #44515e; }
+    html[data-theme="dark"] .status-line { background: rgba(106,137,153,.12); border-color: rgba(106,137,153,.32); color: #cfdae3; }
+    html[data-theme="dark"] .section-note,
+    html[data-theme="dark"] .tile-copy,
+    html[data-theme="dark"] .compare-item .key,
+    html[data-theme="dark"] .bar-value,
+    html[data-theme="dark"] .side-block p,
+    html[data-theme="dark"] p { color: var(--ink-mid); }
+
+    @media (max-width: 1200px) {
+      .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .next-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .hero-grid,
+      .visual-panel,
+      .kpi-stage,
+      .split-grid,
+      .compare-stage,
+      .gap-groups { grid-template-columns: 1fr; }
+      .overlay-stack { width: min(320px, 62vw); }
+    }
+
+    @media (max-width: 820px) {
+      :root { --nav-h: 62px; }
+      section { padding: 78px 0; }
+      .top-nav { grid-template-columns: 1fr; gap: 8px; padding: 8px 0; }
+      .nav-tools { justify-content: flex-end; }
+      .pm-viewport { height: 440px; }
+      .pm-canvas { width: max(1500px, 220vw); min-width: 1200px; }
+      .overlay-left, .overlay-stack { width: calc(100% - 32px); }
+      .overlay-stack { top: auto; bottom: 64px; }
+      .pm-controls { bottom: 12px; }
+      .pm-progress { top: auto; bottom: 56px; width: 120px; }
+      .hero-kpis { grid-template-columns: 1fr; }
+      .hero-kpi.primary { grid-column: auto; }
+      .summary-grid,
+      .next-steps,
+      .gap-groups { grid-template-columns: 1fr; }
+      .kpi-sub-grid { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 1fr; gap: 6px; }
+      .bar-value { min-width: 0; text-align: left; }
+      .spec-head,
+      .spec-row { grid-template-columns: 1fr; }
+      .spec-head div,
+      .spec-row div { border-right: 0; border-bottom: 1px solid #e9ecf1; }
+      .spec-head div:last-child,
+      .spec-row div:last-child { border-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-bar"></span></div>
+  <div class="top-nav-wrap" role="navigation" aria-label="Abschnittsnavigation">
+    <div class="container top-nav">
+      <div class="brand">PM Modernisierung · Executive Deck</div>
+      <div class="nav-links" id="section-nav">
+        <a class="nav-link" href="#overview">Überblick</a>
+        <a class="nav-link" href="#executive">Executive Summary</a>
+        <a class="nav-link" href="#visualisierung">PM-Visualisierung</a>
+        <a class="nav-link" href="#vergleich">Vergleich</a>
+        <a class="nav-link" href="#produktion">Produktionsdaten</a>
+        <a class="nav-link" href="#strom">Strom</a>
+        <a class="nav-link" href="#thermik">Dampf &amp; Gas</a>
+        <a class="nav-link" href="#datenblaetter">Datenblätter</a>
+      </div>
+      <div class="nav-tools">
+        <span class="status-pill" aria-label="Designmodus">Dark Mode</span>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section id="overview" class="hero container">
+      <div class="hero-shell">
+        <div class="status-line"><span class="dot" aria-hidden="true"></span>Projektstatus: Bestand validiert · Umbauwerte gezielt offen</div>
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">Modernisierung Papiermaschine</div>
+            <h1>Belastbare Ausgangsbasis für Kapazität, Energie und Zielbild der Modernisierung.</h1>
+            <p class="lede" style="margin-top:18px;">Dieses Deck übersetzt validierte Bestandsdaten in eine klare Entscheidungsstruktur für Investition, Engineering und nächste Projektstufe. Umbauwerte bleiben bewusst unbesetzt und werden als definierte Befüllungsräume geführt.</p>
+          </div>
+          <div class="hero-kpis" id="hero-kpis"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="executive" class="container">
+      <div class="card">
+        <div class="eyebrow">Executive Summary</div>
+        <h2>Management-Lesbarkeit in fünf priorisierten Aussagen</h2>
+        <p class="lede">Komprimierte Kernaussagen für Screening, Priorisierung und Freigabe der nächsten Projektphase.</p>
+        <div class="summary-grid" id="summary-grid"></div>
+      </div>
+    </section>
+
+    <section id="visualisierung" class="container">
+      <div class="eyebrow">PM-Visualisierung</div>
+      <h2>Leitsektion: Ist-Zustand und Umbaukonzept im direkten Fachkontext</h2>
+      <p class="lede">Großflächig inszenierter Vergleich als visuelle Brücke zwischen Bestandsmechanik, Umbaulogik und Engineering-Kommunikation.</p>
+      <div class="tab-row" role="tablist" aria-label="Visualisierungsmodus">
+        <button class="tab-btn active" id="tab-ist" role="tab" aria-selected="true" aria-controls="panel-ist" tabindex="0" data-tab="ist">Ist-Zustand</button>
+        <button class="tab-btn" id="tab-umbau" role="tab" aria-selected="false" aria-controls="panel-umbau" tabindex="-1" data-tab="umbau">Umbaukonzept</button>
+      </div>
+      <div class="visual-stage">
+        <div class="visual-panel active" id="panel-ist" role="tabpanel" aria-labelledby="tab-ist" data-panel="ist">
+          <div class="visual-image-wrap hotspot-stage">
+            <div class="pm-viewport" id="pm-viewport-ist" tabindex="0" aria-label="Bestandsbild horizontal navigieren">
+              <div class="pm-canvas">
+                <img id="pm-bestand-image" src="assets/pm-bestand.png" alt="Ist-Zustand der Papiermaschine" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-card').style.display='grid'; this.closest('.visual-image-wrap').querySelector('.hotspot-layer').style.display='none'; this.closest('.visual-image-wrap').querySelector('.hotspot-note').style.display='none'; this.closest('.visual-image-wrap').querySelector('.pm-controls').style.display='none'; this.closest('.visual-image-wrap').querySelector('.pm-progress').style.display='none';" />
+                <div class="placeholder-card" style="display:none;">
+                  <strong>Visualisierung wird ergänzt</strong>
+                  <p>Die Bestandsansicht wird automatisch geladen, sobald <code>assets/pm-bestand.png</code> im Projektordner vorliegt.</p>
+                  <span class="status-pill">Platzhalter aktiv</span>
+                </div>
+                <div class="hotspot-layer" id="hotspot-layer-bestand" aria-label="Motorhotspots Bestand"></div>
+              </div>
+            </div>
+            <div class="pm-controls" role="group" aria-label="Horizontale Bildsteuerung">
+              <button class="pm-control-btn" type="button" data-pan-target="ist" data-pan-action="left" aria-label="Nach links bewegen">←</button>
+              <button class="pm-control-btn" type="button" data-pan-target="ist" data-pan-action="start" aria-label="Zur Startansicht">Start</button>
+              <button class="pm-control-btn" type="button" data-pan-target="ist" data-pan-action="center" aria-label="Zur Mitte">Mitte</button>
+              <button class="pm-control-btn" type="button" data-pan-target="ist" data-pan-action="end" aria-label="Zur Endansicht">Ende</button>
+              <button class="pm-control-btn" type="button" data-pan-target="ist" data-pan-action="right" aria-label="Nach rechts bewegen">→</button>
+              <button class="pm-control-btn" id="calibration-toggle" type="button" aria-pressed="false">Feinjustierung aus</button>
+            </div>
+            <div class="hotspot-note" id="hotspot-selection">Hotspot auswählen · Shift + Pfeiltasten = 5px</div>
+            <div class="pm-progress" aria-hidden="true"><span id="pm-progress-ist"></span></div>
+            <div class="visual-caption">Ist-Zustand</div>
+          </div>
+        </div>
+
+        <div class="visual-panel" id="panel-umbau" role="tabpanel" aria-labelledby="tab-umbau" data-panel="umbau">
+          <div class="visual-image-wrap">
+            <div class="pm-viewport" id="pm-viewport-umbau" tabindex="0" aria-label="Umbaukonzept horizontal navigieren">
+              <div class="pm-canvas">
+                <img src="assets/pm-umbau.png" alt="Umbaukonzept der Papiermaschine" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-card').style.display='grid'; this.closest('.visual-image-wrap').querySelector('.pm-controls').style.display='none'; this.closest('.visual-image-wrap').querySelector('.pm-progress').style.display='none';" />
+                <div class="placeholder-card" style="display:none;">
+                  <strong>Visualisierung wird ergänzt</strong>
+                  <p>Das Umbaukonzept erscheint hier automatisch, sobald <code>assets/pm-umbau.png</code> verfügbar ist.</p>
+                  <span class="status-pill">Daten ausstehend</span>
+                </div>
+              </div>
+            </div>
+            <div class="overlay-left">
+              <div class="side-block">
+                <h4>Umbau-Lesart</h4>
+                <p>Die konzeptionelle Linie wird in derselben horizontalen Bühne gezeigt, damit Strukturvergleiche direkt visuell möglich sind.</p>
+              </div>
+            </div>
+            <div class="overlay-stack">
+              <div class="side-block">
+                <h4>Engineering-Dialog</h4>
+                <p>Quantitative Umbauwerte bleiben bewusst offen. Die Bühne unterstützt die räumliche Diskussion, nicht die Vorwegnahme von Zielzahlen.</p>
+              </div>
+            </div>
+            <div class="pm-controls" role="group" aria-label="Horizontale Bildsteuerung Umbau">
+              <button class="pm-control-btn" type="button" data-pan-target="umbau" data-pan-action="left" aria-label="Nach links bewegen">←</button>
+              <button class="pm-control-btn" type="button" data-pan-target="umbau" data-pan-action="start" aria-label="Zur Startansicht">Start</button>
+              <button class="pm-control-btn" type="button" data-pan-target="umbau" data-pan-action="center" aria-label="Zur Mitte">Mitte</button>
+              <button class="pm-control-btn" type="button" data-pan-target="umbau" data-pan-action="end" aria-label="Zur Endansicht">Ende</button>
+              <button class="pm-control-btn" type="button" data-pan-target="umbau" data-pan-action="right" aria-label="Nach rechts bewegen">→</button>
+            </div>
+            <div class="pm-progress" aria-hidden="true"><span id="pm-progress-umbau"></span></div>
+            <div class="visual-caption">Umbaukonzept</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vergleich" class="container">
+      <div class="eyebrow">Bestand vs. Umbau</div>
+      <h2>Executive Comparison Stage mit vorbereiteten Befüllungsräumen</h2>
+      <p class="lede">Links: validierte Ist-Daten. Rechts: strukturiertes Umbau-Zielbild mit bewusst offener Datenlage je Themenblock.</p>
+      <div class="chip-row" id="compare-filter" role="group" aria-label="Vergleichsfilter">
+        <button class="chip-btn" data-filter="all" aria-pressed="true">Alle Themen</button>
+        <button class="chip-btn" data-filter="produktion" aria-pressed="false">Produktion</button>
+        <button class="chip-btn" data-filter="energie" aria-pressed="false">Energie</button>
+        <button class="chip-btn" data-filter="layout" aria-pressed="false">Layout</button>
+        <button class="chip-btn" data-filter="thermik" aria-pressed="false">Thermik</button>
+        <button class="chip-btn" data-filter="engineering" aria-pressed="false">Engineering</button>
+      </div>
+      <div class="compare-stage">
+        <article class="compare-card" id="compare-bestand"></article>
+        <article class="compare-card target" id="compare-umbau"></article>
+      </div>
+    </section>
+
+    <section id="produktion" class="container">
+      <div class="eyebrow">Produktionsdaten</div>
+      <h2>Performance-Modul mit primären und sekundären Kennzahlen</h2>
+      <div class="chip-row production-toggle" role="group" aria-label="Produktionsansicht">
+        <button class="chip-btn" data-prod-view="focus" aria-pressed="true">KPI-Fokus</button>
+        <button class="chip-btn" data-prod-view="detail" aria-pressed="false">Detailkennzahlen</button>
+      </div>
+      <div class="kpi-stage">
+        <article class="kpi-main">
+          <div class="eyebrow" style="margin-bottom:0;">Primäre Kennzahl</div>
+          <h3>Jahresproduktion Bestand</h3>
+          <div class="kpi-main-value" id="annual-output"></div>
+          <p class="section-note">Die Jahresproduktion ist als zentrale Leistungsgröße für Kapazitäts- und Investitionslogik gesetzt.</p>
+        </article>
+        <article class="kpi-sub">
+          <h3>Detailkennzahlen</h3>
+          <div class="kpi-sub-grid" id="prod-detail-kpis"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="strom" class="container">
+      <div class="card">
+        <div class="eyebrow">Strom</div>
+        <h2>Lasthebel und Prioritäten im elektrischen System</h2>
+        <p class="lede">Gesamtleistung Bestand: <strong id="strom-gesamt"></strong>. Ranking zeigt kW-Wert und Anteil am Gesamtsystem als direkte Entscheidungsbasis.</p>
+        <div class="chip-row" role="group" aria-label="Stromdarstellung">
+          <button class="chip-btn" data-chart-mode="absolute" data-chart-target="strom" aria-pressed="true">Absolut</button>
+          <button class="chip-btn" data-chart-mode="relative" data-chart-target="strom" aria-pressed="false">Relativ</button>
+        </div>
+        <div class="bar-block" id="strom-bars"></div>
+      </div>
+    </section>
+
+    <section id="thermik" class="container">
+      <div class="card">
+        <div class="eyebrow">Dampf &amp; Gas</div>
+        <h2>Thermische Hotspots mit relativer Gewichtung</h2>
+        <p class="lede">Dampf gesamt: <strong id="dampf-gesamt"></strong> · Gas gesamt: <strong id="gas-gesamt"></strong>. Hotspots sind als priorisierte Handlungsräume markiert.</p>
+        <div class="chip-row" role="group" aria-label="Thermikdarstellung">
+          <button class="chip-btn" data-chart-mode="absolute" data-chart-target="thermik" aria-pressed="true">Absolut</button>
+          <button class="chip-btn" data-chart-mode="relative" data-chart-target="thermik" aria-pressed="false">Relativ</button>
+        </div>
+        <div class="bar-block" id="thermal-bars"></div>
+      </div>
+    </section>
+
+    <section id="datenblaetter" class="container">
+      <div class="card">
+        <div class="eyebrow">Datenblätter</div>
+        <h2>Produkt- und Materialperspektive: Alt vs. AP</h2>
+        <p class="lede">Vergleich der technischen Produktlogik für Lebensmittelverpackung mit Fokus auf Rohstoffpfad und Flächengewicht.</p>
+        <div class="chip-row" role="group" aria-label="Datenblattfilter">
+          <button class="chip-btn" id="spec-filter-all" aria-pressed="true">Alle Zeilen</button>
+          <button class="chip-btn" id="spec-filter-diff" aria-pressed="false">Nur Unterschiede</button>
+        </div>
+        <div class="spec-compare" id="spec-compare"></div>
+      </div>
+    </section>
+
+  </main>
+  <div class="lightbox" id="image-lightbox" aria-hidden="true">
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Fokusansicht Papiermaschine">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Fokusansicht schließen">×</button>
+      <img id="lightbox-image" alt="Fokusansicht Maschinenbild" />
+    </div>
+  </div>
+
+  <script>
+    const model = {
+      produktion: {
+        bestand: {
+          maschinengeschwindigkeit: "1400 m/min",
+          arbeitsbreite: "5200 mm",
+          flaechenmasse: "40 g/m²",
+          netto_tagestonnen: "339.66 t/d",
+          brutto_tagestonnen: "419.33 t/d",
+          jahresproduktion: "123,974.32 t/a",
+          rohstoffbedarf: "440.29 t/d"
+        },
+        umbau: {
+          maschinengeschwindigkeit: "Zielwert offen",
+          arbeitsbreite: "Noch nicht befüllt",
+          flaechenmasse: "Daten ausstehend",
+          netto_tagestonnen: "Platzhalter für Umbauwerte",
+          brutto_tagestonnen: "Platzhalter für Umbauwerte",
+          jahresproduktion: "Zielwert offen",
+          rohstoffbedarf: "Daten ausstehend"
+        },
+        status: "Bestand validiert · Umbau offen"
+      },
+      energie: {
+        bestand: {
+          gesamt: "1800 kWh/t",
+          strom: "828 kWh/t",
+          dampf: "630 kWh/t",
+          gas: "342 kWh/t"
+        },
+        umbau: {
+          gesamt: "Noch nicht befüllt",
+          strom: "Daten ausstehend",
+          dampf: "Daten ausstehend",
+          gas: "Zielwert offen"
+        },
+        status: "Umbau-Energiedesign offen"
+      },
+      strom: {
+        bestand: {
+          gesamt_kw: 14470,
+          verbraucher_kw: [
+            ["Stoffaufbereitung", 8570],
+            ["PM", 5775],
+            ["Vortrockenpartie", 1490],
+            ["Vakuum", 1180],
+            ["Sonstiges", 1100],
+            ["Nachtrockenpartie", 740],
+            ["Pressenpartie", 700],
+            ["Siebpartie", 565]
+          ]
+        },
+        umbau: {
+          gesamt_kw: "Daten ausstehend",
+          verbraucher_kw: "Platzhalter für Umbauwerte"
+        },
+        status: "Struktur vorbereitet"
+      },
+      thermik: {
+        bestand: {
+          dampf_gesamt: "10979.94 kWh/h",
+          gas_gesamt: "5899.89 kWh/h",
+          hauptverbraucher_kwhh: [
+            ["HG4", 3269.61],
+            ["Yankee-Hauben", 2643.46],
+            ["HG1", 2479.90],
+            ["Yankee", 2440.11],
+            ["HG2", 2029.01],
+            ["IR-Trockner Decke", 1628.22],
+            ["IR-Trockner Rückseite", 1628.22],
+            ["HG3", 761.31]
+          ]
+        },
+        umbau: {
+          dampf_gesamt: "Noch nicht befüllt",
+          gas_gesamt: "Noch nicht befüllt",
+          hauptverbraucher_kwhh: "Zielwert offen"
+        },
+        status: "Thermische Umbauwerte offen"
+      },
+      datenblaetter: {
+        bestand: {
+          variante_alt: "Frischfaser + Stärke-Leimung (Sizer)",
+          variante_ap: "Altpapier (DIP/PCW) + beidseitiger Barrierestrich",
+          anwendung: "fettabweisende Lebensmittelverpackung",
+          flaechengewicht_alt: "40 g/m²",
+          flaechengewicht_ap: "60 g/m² gesamt",
+          recyclinganteil_ap: "≥ 85 %"
+        },
+        umbau: {
+          produktspezifikation: "Daten ausstehend"
+        },
+        status: "Produktsystem definiert"
+      },
+      data_gaps: {
+        produktionszielbild: [
+          "Maschinengeschwindigkeit",
+          "Arbeitsbreite",
+          "Flächenbezogene Masse",
+          "Netto- und Brutto-Tagestonnen",
+          "Jahresproduktion"
+        ],
+        energiedesign: [
+          "Spezifische Gesamtenergie",
+          "Spezifischer Strombedarf",
+          "Spezifischer Dampfbedarf",
+          "Spezifischer Gasbedarf"
+        ],
+        layout_aggregatkonzept: [
+          "Stromsystem Gesamtleistung",
+          "Verbraucher je Baugruppe",
+          "Linien-/Aggregatkonfiguration"
+        ],
+        thermik: [
+          "Dampf gesamt",
+          "Gas gesamt",
+          "Thermische Hauptverbraucher"
+        ],
+        wirtschaftlichkeit_capex: [
+          "CAPEX-Struktur",
+          "Wirtschaftlichkeitslogik",
+          "Projektzielwerte je Ausbaustufe"
+        ]
+      }
+    };
+
+    const heroKpis = [
+      { label: "Jahresproduktion", value: model.produktion.bestand.jahresproduktion, primary: true },
+      { label: "Netto-Tagestonnen", value: model.produktion.bestand.netto_tagestonnen },
+      { label: "Maschinengeschwindigkeit", value: model.produktion.bestand.maschinengeschwindigkeit },
+      { label: "Spezifische Gesamtenergie", value: model.energie.bestand.gesamt },
+      { label: "Umbau-Datenstatus", value: "Daten ausstehend" }
+    ];
+
+    const summaryTiles = [
+      {
+        prio: "Priorität A",
+        title: "Leistungsbasis gesichert",
+        copy: "123,974.32 t/a und 339.66 t/d Netto als belastbarer Startpunkt für jede Ausbauvariante."
+      },
+      {
+        prio: "Priorität A",
+        title: "Energiehebel klar",
+        copy: "Strom 828, Dampf 630, Gas 342 kWh/t zeigen die primären Optimierungsachsen des Zielbilds."
+      },
+      {
+        prio: "Priorität A",
+        title: "Elektrische Lastzentren",
+        copy: "Stoffaufbereitung und PM dominieren die elektrische Lastverteilung und priorisieren Retrofit-Fokus."
+      },
+      {
+        prio: "Priorität B",
+        title: "Thermische Hotspots",
+        copy: "HG4, Yankee-Hauben und HG1 sind die führenden Verbraucher in der thermischen Laststruktur."
+      },
+      {
+        prio: "Priorität A",
+        title: "Data-Gap diszipliniert",
+        copy: "Umbauwerte werden strikt als offen geführt – ohne Schätzung, ohne implizite Übernahme."
+      }
+    ];
+
+    const compareGroups = {
+      produktion: [
+        ["Maschinengeschwindigkeit", "maschinengeschwindigkeit"],
+        ["Arbeitsbreite", "arbeitsbreite"],
+        ["Flächenbezogene Masse", "flaechenmasse"],
+        ["Netto-Tagestonnen", "netto_tagestonnen"],
+        ["Brutto-Tagestonnen", "brutto_tagestonnen"],
+        ["Jahresproduktion", "jahresproduktion"],
+        ["Rohstoffbedarf", "rohstoffbedarf"]
+      ],
+      energie: [
+        ["Spezifische Gesamtenergie", "gesamt"],
+        ["Spezifischer Strom", "strom"],
+        ["Spezifischer Dampf", "dampf"],
+        ["Spezifisches Gas", "gas"]
+      ],
+      linie_layout: [
+        ["Stromsystem gesamt", "stom_total"],
+        ["Verbraucher je Baugruppe", "stom_units"]
+      ],
+      thermik: [
+        ["Dampf gesamt", "dampf_total"],
+        ["Gas gesamt", "gas_total"],
+        ["Thermische Hauptverbraucher", "thermal_units"]
+      ],
+      engineering: [
+        ["CAPEX-Struktur", "capex"],
+        ["Wirtschaftlichkeitslogik", "economics"],
+        ["Ausbaustufen-Zielwerte", "stages"]
+      ]
+    };
+
+    const state = {
+      compareFilter: 'all',
+      chartMode: { strom: 'absolute', thermik: 'absolute' },
+      productionView: 'focus',
+      specDiffOnly: false,
+      criticalGapsOnly: false,
+      themeChoice: 'dark',
+      selectedMotorId: null,
+      calibrationMode: false
+    };
+
+    const hotspotOffsetsPx = new Map();
+
+    const pm_hotspots_calibrated = [
+      { motor_id: "M028", x: 11.2, y: 63.5, kw: 140 }, { motor_id: "M026", x: 15.8, y: 62.2, kw: 135 },
+      { motor_id: "M027", x: 14.5, y: 70.8, kw: 70 }, { motor_id: "M025", x: 18.9, y: 73.0, kw: 220 },
+      { motor_id: "M029", x: 21.7, y: 65.0, kw: 350 }, { motor_id: "M030", x: 24.2, y: 64.0, kw: 350 },
+      { motor_id: "M031", x: 27.3, y: 66.5, kw: 100 }, { motor_id: "M032", x: 29.5, y: 66.5, kw: 100 },
+      { motor_id: "M033", x: 31.5, y: 66.5, kw: 100 }, { motor_id: "M034", x: 33.5, y: 66.5, kw: 100 },
+      { motor_id: "M035", x: 35.5, y: 66.5, kw: 100 }, { motor_id: "M036", x: 37.5, y: 66.5, kw: 100 },
+      { motor_id: "M037", x: 39.5, y: 66.5, kw: 100 }, { motor_id: "M038", x: 41.5, y: 66.5, kw: 100 },
+      { motor_id: "M039", x: 44.5, y: 67.0, kw: 50 }, { motor_id: "M040", x: 46.5, y: 78.0, kw: 50 },
+      { motor_id: "M041", x: 48.5, y: 66.5, kw: 50 }, { motor_id: "M042", x: 51.5, y: 54.0, kw: 400 },
+      { motor_id: "M044", x: 54.5, y: 65.5, kw: 20 }, { motor_id: "M045", x: 56.5, y: 66.5, kw: 20 },
+      { motor_id: "M046", x: 58.5, y: 66.5, kw: 20 }, { motor_id: "M047", x: 60.5, y: 66.5, kw: 20 },
+      { motor_id: "M048", x: 62.5, y: 66.5, kw: 20 }, { motor_id: "M051", x: 66.5, y: 64.5, kw: 100 },
+      { motor_id: "M053", x: 69.0, y: 63.0, kw: 20 }, { motor_id: "M056", x: 73.5, y: 61.5, kw: 90 },
+      { motor_id: "M059", x: 78.0, y: 66.0, kw: 20 }, { motor_id: "M060", x: 80.0, y: 66.0, kw: 20 },
+      { motor_id: "M064", x: 84.5, y: 66.5, kw: 20 }, { motor_id: "M065", x: 87.0, y: 66.0, kw: 20 },
+      { motor_id: "M067", x: 90.5, y: 67.5, kw: 20 }, { motor_id: "M068", x: 92.5, y: 67.0, kw: 80 }
+    ];
+
+    model.pm_hotspots = {
+      bestand: pm_hotspots_calibrated.map(m => ({
+        motor_id: m.motor_id,
+        label: m.motor_id,
+        kw: m.kw,
+        bereich: "Bestands-PM",
+        status: "Bestand",
+        x: m.x,
+        y: m.y
+      })),
+      umbau: []
+    };
+
+    function formatPercent(value, total) {
+      return `${(value / total * 100).toFixed(1).replace('.', ',')} %`;
+    }
+
+    function renderHeroKpis() {
+      const target = document.getElementById("hero-kpis");
+      heroKpis.forEach(item => {
+        const el = document.createElement("article");
+        el.className = `hero-kpi${item.primary ? ' primary' : ''}`;
+        el.innerHTML = `<div class="kpi-label">${item.label}</div><div class="kpi-value">${item.value}</div>`;
+        target.appendChild(el);
+      });
+    }
+
+    function renderSummary() {
+      const sectionMap = ["#produktion", "#strom", "#strom", "#thermik", "#vergleich"];
+      const target = document.getElementById("summary-grid");
+      summaryTiles.forEach((tile, i) => {
+        const el = document.createElement("article");
+        el.className = "summary-tile";
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("role", "button");
+        el.setAttribute("aria-label", `Zur Sektion springen: ${sectionMap[i].replace('#','')}`);
+        el.dataset.jump = sectionMap[i];
+        el.innerHTML = `
+          <span class="tile-prio">${tile.prio}</span>
+          <div class="tile-title">${tile.title}</div>
+          <p class="tile-copy">${tile.copy}</p>
+        `;
+        const jump = () => document.querySelector(el.dataset.jump)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        el.addEventListener("click", jump);
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); jump(); }
+        });
+        target.appendChild(el);
+      });
+    }
+
+    function renderCompare() {
+      const left = document.getElementById("compare-bestand");
+      const right = document.getElementById("compare-umbau");
+
+      const leftGroups = [
+        {
+          key: "produktion",
+          title: "Produktion",
+          rows: compareGroups.produktion.map(([label, key]) => [label, model.produktion.bestand[key]])
+        },
+        {
+          key: "energie",
+          title: "Energie",
+          rows: compareGroups.energie.map(([label, key]) => [label, model.energie.bestand[key]])
+        },
+        {
+          key: "layout",
+          title: "Linie / Layout",
+          rows: [
+            ["Stromsystem gesamt", `${model.strom.bestand.gesamt_kw.toLocaleString('de-DE')} kW`],
+            ["Verbraucher je Baugruppe", "Bestandsranking vorhanden"]
+          ]
+        },
+        {
+          key: "thermik",
+          title: "Thermik",
+          rows: [
+            ["Dampf gesamt", model.thermik.bestand.dampf_gesamt],
+            ["Gas gesamt", model.thermik.bestand.gas_gesamt],
+            ["Thermische Hauptverbraucher", "Bestandsranking vorhanden"]
+          ]
+        }
+      ];
+
+      const rightGroups = [
+        {
+          key: "produktion",
+          title: "Produktion",
+          rows: compareGroups.produktion.map(([label, key]) => [label, model.produktion.umbau[key]])
+        },
+        {
+          key: "energie",
+          title: "Energie",
+          rows: compareGroups.energie.map(([label, key]) => [label, model.energie.umbau[key]])
+        },
+        {
+          key: "layout",
+          title: "Linie / Layout",
+          rows: [
+            ["Stromsystem gesamt", model.strom.umbau.gesamt_kw],
+            ["Verbraucher je Baugruppe", model.strom.umbau.verbraucher_kw]
+          ]
+        },
+        {
+          key: "thermik",
+          title: "Thermik",
+          rows: [
+            ["Dampf gesamt", model.thermik.umbau.dampf_gesamt],
+            ["Gas gesamt", model.thermik.umbau.gas_gesamt],
+            ["Thermische Hauptverbraucher", model.thermik.umbau.hauptverbraucher_kwhh]
+          ]
+        },
+        {
+          key: "engineering",
+          title: "Offene Engineering-Werte",
+          rows: [
+            ["CAPEX-Struktur", "Noch nicht befüllt"],
+            ["Wirtschaftlichkeitslogik", "Daten ausstehend"],
+            ["Ausbaustufen-Zielwerte", "Zielwert offen"]
+          ]
+        }
+      ];
+
+      const makeGroup = (group, placeholder = false) => {
+        const rows = group.rows.map(([k, v]) => `
+          <div class="compare-item${placeholder ? ' placeholder' : ''}">
+            <span class="key">${k}</span>
+            <span class="val">${v}</span>
+          </div>
+        `).join("");
+        return `
+          <div class="compare-group" data-group="${group.key}">
+            <div class="group-title">${group.title}</div>
+            <div class="compare-list">${rows}</div>
+          </div>
+        `;
+      };
+
+      left.innerHTML = `<h3>Bestand · belastbare Ist-Daten</h3>${leftGroups.map(g => makeGroup(g)).join("")}`;
+      right.innerHTML = `<h3>Umbau · strukturiertes Zielbild (offene Werte)</h3>${rightGroups.map(g => makeGroup(g, true)).join("")}`;
+      applyCompareFilter();
+    }
+
+    function renderProductionKpis() {
+      document.getElementById("annual-output").textContent = model.produktion.bestand.jahresproduktion;
+      const details = [
+        ["Netto-Tagestonnen", model.produktion.bestand.netto_tagestonnen],
+        ["Brutto-Tagestonnen", model.produktion.bestand.brutto_tagestonnen],
+        ["Geschwindigkeit", model.produktion.bestand.maschinengeschwindigkeit],
+        ["Arbeitsbreite", model.produktion.bestand.arbeitsbreite],
+        ["Flächenbezogene Masse", model.produktion.bestand.flaechenmasse],
+        ["Rohstoffbedarf", model.produktion.bestand.rohstoffbedarf],
+        ["Spezifische Gesamtenergie", model.energie.bestand.gesamt]
+      ];
+      const target = document.getElementById("prod-detail-kpis");
+      details.forEach(([label, value]) => {
+        const el = document.createElement("div");
+        el.className = "kpi-sub-item";
+        el.innerHTML = `<span class="label">${label}</span><span class="value">${value}</span>`;
+        target.appendChild(el);
+      });
+      applyProductionView();
+    }
+
+    function applyCompareFilter() {
+      const groups = document.querySelectorAll('.compare-group');
+      groups.forEach(group => {
+        const show = state.compareFilter === 'all' || group.dataset.group === state.compareFilter;
+        group.classList.toggle('hidden', !show);
+      });
+    }
+
+    function setupCompareFilter() {
+      const buttons = document.querySelectorAll('#compare-filter .chip-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.compareFilter = btn.dataset.filter;
+          buttons.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+          applyCompareFilter();
+        });
+      });
+    }
+
+    function renderPowerBars() {
+      const total = model.strom.bestand.gesamt_kw;
+      document.getElementById("strom-gesamt").textContent = `${total.toLocaleString('de-DE')} kW`;
+      const data = [...model.strom.bestand.verbraucher_kw].sort((a, b) => b[1] - a[1]);
+      const max = data[0][1];
+      const target = document.getElementById("strom-bars");
+      target.innerHTML = "";
+
+      data.forEach(([label, value], idx) => {
+        const hotspot = idx < 3;
+        const relative = value / total;
+        const widthPct = state.chartMode.strom === "relative" ? (relative * 100) : ((value / max) * 100);
+        const valueLabel = state.chartMode.strom === "relative"
+          ? `${formatPercent(value, total)} vom Gesamtwert`
+          : `${value.toLocaleString('de-DE')} kW · ${formatPercent(value, total)}`;
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML = `
+          <div class="bar-meta">
+            <span class="bar-label">${label}</span>
+            <span class="bar-rank ${hotspot ? 'hotspot' : ''}">Rang ${idx + 1}${hotspot ? ' · Hotspot' : ''}</span>
+          </div>
+          <div class="bar-track"><span class="bar-fill ${hotspot ? 'hotspot' : ''}" style="width:${widthPct}%"></span></div>
+          <div class="bar-value">${valueLabel}</div>
+        `;
+        target.appendChild(row);
+      });
+    }
+
+    function renderThermalBars() {
+      document.getElementById("dampf-gesamt").textContent = model.thermik.bestand.dampf_gesamt;
+      document.getElementById("gas-gesamt").textContent = model.thermik.bestand.gas_gesamt;
+
+      const data = [...model.thermik.bestand.hauptverbraucher_kwhh].sort((a, b) => b[1] - a[1]);
+      const total = data.reduce((sum, [, v]) => sum + v, 0);
+      const max = data[0][1];
+      const target = document.getElementById("thermal-bars");
+      target.innerHTML = "";
+
+      data.forEach(([label, value], idx) => {
+        const hotspot = idx < 3;
+        const relative = value / total;
+        const widthPct = state.chartMode.thermik === "relative" ? (relative * 100) : ((value / max) * 100);
+        const valueLabel = state.chartMode.thermik === "relative"
+          ? `${formatPercent(value, total)} vom Thermik-Cluster`
+          : `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kWh/h · ${formatPercent(value, total)}`;
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML = `
+          <div class="bar-meta">
+            <span class="bar-label">${label}</span>
+            <span class="bar-rank ${hotspot ? 'hotspot' : ''}">Rang ${idx + 1}${hotspot ? ' · Thermal-Hotspot' : ''}</span>
+          </div>
+          <div class="bar-track"><span class="bar-fill ${hotspot ? 'hotspot' : ''}" style="width:${widthPct}%"></span></div>
+          <div class="bar-value">${valueLabel}</div>
+        `;
+        target.appendChild(row);
+      });
+    }
+
+    function setupChartModeToggle() {
+      const buttons = document.querySelectorAll('[data-chart-mode]');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.chartTarget;
+          state.chartMode[target] = btn.dataset.chartMode;
+          document.querySelectorAll(`[data-chart-target=\"${target}\"]`).forEach(b => {
+            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+          });
+          if (target === 'strom') renderPowerBars();
+          if (target === 'thermik') renderThermalBars();
+        });
+      });
+    }
+
+    function renderSpecCompare() {
+      const target = document.getElementById("spec-compare");
+      const rows = [
+        ["Faser-/Strichsystem", model.datenblaetter.bestand.variante_alt, model.datenblaetter.bestand.variante_ap, true],
+        ["Anwendung", model.datenblaetter.bestand.anwendung, model.datenblaetter.bestand.anwendung, false],
+        ["Flächengewicht", model.datenblaetter.bestand.flaechengewicht_alt, model.datenblaetter.bestand.flaechengewicht_ap, true],
+        ["Recyclinganteil", "—", model.datenblaetter.bestand.recyclinganteil_ap, true]
+      ];
+
+      target.innerHTML = `
+        <div class="spec-head">
+          <div>Parameter</div>
+          <div>Variante Alt</div>
+          <div>Variante AP</div>
+        </div>
+        ${rows.map((row, i) => `
+          <div class="spec-row ${i === 2 || i === 3 ? 'highlight' : ''}" data-diff="${row[3] ? 'true' : 'false'}">
+            <div class="key">${row[0]}</div>
+            <div class="alt">${row[1]}</div>
+            <div class="ap">${row[2]}</div>
+          </div>
+        `).join('')}
+      `;
+      applySpecFilter();
+    }
+
+    function renderGapGroups() {
+      const target = document.getElementById("gap-groups");
+      const labels = {
+        produktionszielbild: "Produktionszielbild",
+        energiedesign: "Energiedesign",
+        layout_aggregatkonzept: "Layout / Aggregatkonzept",
+        thermik: "Thermik",
+        wirtschaftlichkeit_capex: "Wirtschaftlichkeit / CAPEX"
+      };
+
+      Object.entries(model.data_gaps).forEach(([key, items]) => {
+        const card = document.createElement("article");
+        card.className = "gap-group";
+        const priority = key === "produktionszielbild" || key === "energiedesign" ? "hoch" : (key === "layout_aggregatkonzept" || key === "thermik" ? "mittel" : "nachgelagert");
+        card.dataset.priority = priority;
+        card.innerHTML = `
+          <h4>${labels[key]}</h4>
+          <div class="gap-list">
+            ${items.map(item => `
+              <div class="gap-item">
+                <strong>${item}</strong>
+                <span class="status-pill">Daten ausstehend</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        target.appendChild(card);
+      });
+      applyGapFilter();
+    }
+
+    function applyProductionView() {
+      const showDetail = state.productionView === 'detail';
+      const detailPanel = document.querySelector('.kpi-sub');
+      const note = document.querySelector('.kpi-main .section-note');
+      if (!detailPanel || !note) return;
+      detailPanel.style.display = showDetail ? 'block' : 'none';
+      note.style.display = showDetail ? 'none' : 'block';
+      document.querySelector('.kpi-stage').style.gridTemplateColumns = showDetail ? '1fr 1fr' : '1fr';
+    }
+
+    function setupProductionToggle() {
+      const buttons = document.querySelectorAll('[data-prod-view]');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.productionView = btn.dataset.prodView;
+          buttons.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+          applyProductionView();
+        });
+      });
+    }
+
+    function applySpecFilter() {
+      const rows = document.querySelectorAll('.spec-row[data-diff]');
+      rows.forEach(row => {
+        const isDiff = row.dataset.diff === 'true';
+        const muted = state.specDiffOnly && !isDiff;
+        row.classList.toggle('muted', muted);
+      });
+    }
+
+    function setupSpecFilter() {
+      const allBtn = document.getElementById('spec-filter-all');
+      const diffBtn = document.getElementById('spec-filter-diff');
+      allBtn.addEventListener('click', () => {
+        state.specDiffOnly = false;
+        allBtn.setAttribute('aria-pressed', 'true');
+        diffBtn.setAttribute('aria-pressed', 'false');
+        applySpecFilter();
+      });
+      diffBtn.addEventListener('click', () => {
+        state.specDiffOnly = true;
+        allBtn.setAttribute('aria-pressed', 'false');
+        diffBtn.setAttribute('aria-pressed', 'true');
+        applySpecFilter();
+      });
+    }
+
+    function applyGapFilter() {
+      const groups = document.querySelectorAll('.gap-group');
+      groups.forEach(group => {
+        const show = !state.criticalGapsOnly || group.dataset.priority === 'hoch';
+        group.style.display = show ? 'block' : 'none';
+      });
+    }
+
+    function setupGapFilter() {
+      const allBtn = document.getElementById('gap-filter-all');
+      const critBtn = document.getElementById('gap-filter-critical');
+      allBtn.addEventListener('click', () => {
+        state.criticalGapsOnly = false;
+        allBtn.setAttribute('aria-pressed', 'true');
+        critBtn.setAttribute('aria-pressed', 'false');
+        applyGapFilter();
+      });
+      critBtn.addEventListener('click', () => {
+        state.criticalGapsOnly = true;
+        allBtn.setAttribute('aria-pressed', 'false');
+        critBtn.setAttribute('aria-pressed', 'true');
+        applyGapFilter();
+      });
+    }
+
+    function setMotorSelection(motor) {
+      const status = document.getElementById('hotspot-selection');
+      if (!motor) {
+        state.selectedMotorId = null;
+        if (status) status.textContent = 'Hotspot auswählen · Shift + Pfeiltasten = 5px';
+      } else {
+        state.selectedMotorId = motor.motor_id;
+        if (status) status.textContent = `${motor.motor_id} · ${motor.kw} kW · Shift+Pfeil: 5px`;
+      }
+      document.querySelectorAll('.hotspot-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.motorId === state.selectedMotorId));
+    }
+
+    function renderPmHotspots() {
+      const layer = document.getElementById('hotspot-layer-bestand');
+      const img = document.getElementById('pm-bestand-image');
+      const viewport = document.getElementById('pm-viewport-ist');
+      if (!layer) return;
+      layer.innerHTML = '';
+      const byId = new Map(model.pm_hotspots.bestand.map(h => [h.motor_id, h]));
+      model.pm_hotspots.bestand.forEach(h => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'hotspot-btn';
+        btn.dataset.x = String(h.x);
+        btn.dataset.y = String(h.y);
+        btn.dataset.motorId = h.motor_id;
+        btn.setAttribute('aria-label', `Motor ${h.motor_id}, ${h.kw} Kilowatt`);
+        btn.innerHTML = `<span class=\"hotspot-label\">${h.motor_id}</span>`;
+        btn.addEventListener('click', () => setMotorSelection(h));
+        let dragging = false;
+        const pointerMove = (clientX, clientY) => {
+          if (!state.calibrationMode || !dragging || !img) return;
+          const rect = img.getBoundingClientRect();
+          const nextX = ((clientX - rect.left) / rect.width) * 100;
+          const nextY = ((clientY - rect.top) / rect.height) * 100;
+          h.x = Math.min(100, Math.max(0, nextX));
+          h.y = Math.min(100, Math.max(0, nextY));
+          btn.dataset.x = String(h.x);
+          btn.dataset.y = String(h.y);
+          hotspotOffsetsPx.delete(h.motor_id);
+          updateHotspotPositions();
+        };
+        btn.addEventListener('mousedown', e => {
+          if (!state.calibrationMode) return;
+          dragging = true;
+          setMotorSelection(h);
+          e.stopPropagation();
+          e.preventDefault();
+        });
+        window.addEventListener('mousemove', e => pointerMove(e.clientX, e.clientY));
+        window.addEventListener('mouseup', () => { dragging = false; });
+        btn.addEventListener('touchstart', e => {
+          if (!state.calibrationMode) return;
+          dragging = true;
+          setMotorSelection(h);
+          e.stopPropagation();
+        }, { passive: true });
+        window.addEventListener('touchmove', e => {
+          if (!dragging || !e.touches[0]) return;
+          pointerMove(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+        window.addEventListener('touchend', () => { dragging = false; });
+        btn.addEventListener('keydown', e => {
+          if (!state.calibrationMode || state.selectedMotorId !== h.motor_id) return;
+          const step = e.shiftKey ? 5 : 1;
+          let dx = 0, dy = 0;
+          if (e.key === 'ArrowLeft') dx = -step;
+          if (e.key === 'ArrowRight') dx = step;
+          if (e.key === 'ArrowUp') dy = -step;
+          if (e.key === 'ArrowDown') dy = step;
+          if (!dx && !dy) return;
+          e.preventDefault();
+          const prev = hotspotOffsetsPx.get(h.motor_id) || { dx: 0, dy: 0 };
+          hotspotOffsetsPx.set(h.motor_id, { dx: prev.dx + dx, dy: prev.dy + dy });
+          updateHotspotPositions();
+        });
+        layer.appendChild(btn);
+      });
+
+      const updateHotspotPositions = () => {
+        if (!img || img.style.display === 'none') return;
+        const imgRect = img.getBoundingClientRect();
+        const layerRect = layer.getBoundingClientRect();
+        layer.querySelectorAll('.hotspot-btn').forEach(btn => {
+          const x = Number(btn.dataset.x);
+          const y = Number(btn.dataset.y);
+          const offset = hotspotOffsetsPx.get(btn.dataset.motorId) || { dx: 0, dy: 0 };
+          const left = (imgRect.left - layerRect.left) + (imgRect.width * (x / 100)) + offset.dx;
+          const top = (imgRect.top - layerRect.top) + (imgRect.height * (y / 100)) + offset.dy;
+          btn.style.left = `${left}px`;
+          btn.style.top = `${top}px`;
+        });
+
+        if (state.selectedMotorId) {
+          const m = byId.get(state.selectedMotorId);
+          if (m) {
+            const offset = hotspotOffsetsPx.get(m.motor_id) || { dx: 0, dy: 0 };
+            const xPercent = m.x + ((offset.dx / imgRect.width) * 100);
+            const yPercent = m.y + ((offset.dy / imgRect.height) * 100);
+            const status = document.getElementById('hotspot-selection');
+            if (status) status.textContent = `${m.motor_id} · ${m.kw} kW · x:${xPercent.toFixed(2)} y:${yPercent.toFixed(2)}`;
+          }
+        }
+      };
+
+      document.getElementById('calibration-toggle').addEventListener('click', e => {
+        state.calibrationMode = !state.calibrationMode;
+        e.currentTarget.setAttribute('aria-pressed', state.calibrationMode ? 'true' : 'false');
+        e.currentTarget.textContent = state.calibrationMode ? 'Feinjustierung an' : 'Feinjustierung aus';
+      });
+      window.addEventListener('resize', updateHotspotPositions);
+      viewport?.addEventListener('scroll', updateHotspotPositions, { passive: true });
+      viewport?.addEventListener('mousemove', () => requestAnimationFrame(updateHotspotPositions), { passive: true });
+      img?.addEventListener('load', updateHotspotPositions);
+      img?.addEventListener('transitionend', updateHotspotPositions);
+      requestAnimationFrame(updateHotspotPositions);
+      setMotorSelection(null);
+    }
+
+    function renderNextSteps() {
+      const steps = [
+        "Umbau-Zielwerte für Kapazität und Flächengewicht verbindlich definieren.",
+        "Energiedesign für Strom, Dampf und Gas je Zielzustand ausarbeiten.",
+        "Layout- und Aggregatkonzept je Baugruppe in belastbarem Scope fixieren.",
+        "Thermische Zielarchitektur inklusive Hauptverbraucherstruktur spezifizieren.",
+        "Wirtschaftlichkeitslogik und CAPEX-Struktur für die Investitionsentscheidung aufsetzen."
+      ];
+      const target = document.getElementById("next-steps");
+      steps.forEach((text, i) => {
+        const step = document.createElement("div");
+        step.className = "step";
+        step.innerHTML = `<span class="step-index">${i + 1}</span><p>${text}</p>`;
+        target.appendChild(step);
+      });
+    }
+
+    function activateTab(tabKey) {
+      const tabs = document.querySelectorAll('.tab-btn');
+      const panels = document.querySelectorAll('.visual-panel');
+      tabs.forEach(btn => {
+        const active = btn.dataset.tab === tabKey;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+        btn.tabIndex = active ? 0 : -1;
+      });
+      panels.forEach(panel => {
+        panel.classList.toggle('active', panel.dataset.panel === tabKey);
+      });
+    }
+
+    function setupTabs() {
+      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+      tabs.forEach((btn, index) => {
+        btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+        btn.addEventListener('keydown', e => {
+          if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) return;
+          e.preventDefault();
+          let nextIndex = index;
+          if (e.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+          if (e.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+          if (e.key === "Home") nextIndex = 0;
+          if (e.key === "End") nextIndex = tabs.length - 1;
+          const next = tabs[nextIndex];
+          next.focus();
+          activateTab(next.dataset.tab);
+        });
+      });
+    }
+
+    function setupSectionNav() {
+      const links = Array.from(document.querySelectorAll('.nav-link'));
+      const sections = links
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+      const byId = new Map(links.map(link => [link.getAttribute('href').slice(1), link]));
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          links.forEach(l => l.classList.remove('active'));
+          const link = byId.get(entry.target.id);
+          if (link) link.classList.add('active');
+        });
+      }, { rootMargin: "-38% 0px -56% 0px", threshold: 0.01 });
+
+      sections.forEach(section => observer.observe(section));
+    }
+
+    function setupScrollProgress() {
+      const bar = document.getElementById('scroll-progress-bar');
+      const update = () => {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - window.innerHeight;
+        const ratio = max > 0 ? (window.scrollY / max) * 100 : 0;
+        bar.style.width = `${Math.min(100, Math.max(0, ratio))}%`;
+      };
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    }
+
+    function setupLightbox() {
+      const lightbox = document.getElementById('image-lightbox');
+      const lightboxImg = document.getElementById('lightbox-image');
+      const closeBtn = document.getElementById('lightbox-close');
+      const open = src => {
+        if (!src) return;
+        lightboxImg.src = src;
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        closeBtn.focus();
+      };
+      const close = () => {
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        lightboxImg.removeAttribute('src');
+      };
+      document.querySelectorAll('.visual-image-wrap img').forEach(img => {
+        img.addEventListener('click', () => open(img.getAttribute('src')));
+      });
+      closeBtn.addEventListener('click', close);
+      lightbox.addEventListener('click', e => { if (e.target === lightbox) close(); });
+      window.addEventListener('keydown', e => { if (e.key === 'Escape' && lightbox.classList.contains('open')) close(); });
+    }
+
+    function setupPmPanorama() {
+      const viewports = {
+        ist: document.getElementById('pm-viewport-ist'),
+        umbau: document.getElementById('pm-viewport-umbau')
+      };
+
+      const updateProgress = (key) => {
+        const vp = viewports[key];
+        const bar = document.getElementById(`pm-progress-${key}`);
+        if (!vp || !bar) return;
+        const max = vp.scrollWidth - vp.clientWidth;
+        const ratio = max > 0 ? vp.scrollLeft / max : 0;
+        bar.style.width = `${Math.min(100, Math.max(0, ratio * 100))}%`;
+      };
+
+      Object.entries(viewports).forEach(([key, vp]) => {
+        if (!vp) return;
+        let isDown = false;
+        let startX = 0;
+        let startScroll = 0;
+
+        const onDown = (x) => {
+          if (state.calibrationMode) return;
+          isDown = true;
+          startX = x;
+          startScroll = vp.scrollLeft;
+        };
+        const onMove = (x) => {
+          if (!isDown || state.calibrationMode) return;
+          vp.scrollLeft = startScroll - (x - startX);
+        };
+        const onUp = () => { isDown = false; };
+
+        vp.addEventListener('mousedown', e => onDown(e.clientX));
+        vp.addEventListener('mousemove', e => onMove(e.clientX));
+        vp.addEventListener('mouseleave', onUp);
+        vp.addEventListener('mouseup', onUp);
+
+        vp.addEventListener('touchstart', e => onDown(e.touches[0].clientX), { passive: true });
+        vp.addEventListener('touchmove', e => onMove(e.touches[0].clientX), { passive: true });
+        vp.addEventListener('touchend', onUp);
+
+        vp.addEventListener('wheel', e => {
+          if (state.calibrationMode) return;
+          if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            vp.scrollLeft += e.deltaY;
+            e.preventDefault();
+          }
+        }, { passive: false });
+
+        vp.addEventListener('keydown', e => {
+          const delta = Math.max(120, vp.clientWidth * 0.2);
+          if (e.key === 'ArrowRight') { vp.scrollLeft += delta; e.preventDefault(); }
+          if (e.key === 'ArrowLeft') { vp.scrollLeft -= delta; e.preventDefault(); }
+          if (e.key === 'Home') { vp.scrollLeft = 0; e.preventDefault(); }
+          if (e.key === 'End') { vp.scrollLeft = vp.scrollWidth; e.preventDefault(); }
+        });
+
+        vp.addEventListener('scroll', () => updateProgress(key), { passive: true });
+        updateProgress(key);
+      });
+
+      document.querySelectorAll('.pm-control-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const vp = viewports[btn.dataset.panTarget];
+          if (!vp) return;
+          const step = Math.max(160, vp.clientWidth * 0.25);
+          const max = vp.scrollWidth - vp.clientWidth;
+          if (btn.dataset.panAction === 'left') vp.scrollBy({ left: -step, behavior: 'smooth' });
+          if (btn.dataset.panAction === 'right') vp.scrollBy({ left: step, behavior: 'smooth' });
+          if (btn.dataset.panAction === 'start') vp.scrollTo({ left: 0, behavior: 'smooth' });
+          if (btn.dataset.panAction === 'center') vp.scrollTo({ left: max / 2, behavior: 'smooth' });
+          if (btn.dataset.panAction === 'end') vp.scrollTo({ left: max, behavior: 'smooth' });
+        });
+      });
+    }
+
+    renderHeroKpis();
+    renderSummary();
+    renderCompare();
+    renderProductionKpis();
+    renderPmHotspots();
+    renderPowerBars();
+    renderThermalBars();
+    renderSpecCompare();
+    setupTabs();
+    setupCompareFilter();
+    setupProductionToggle();
+    setupChartModeToggle();
+    setupSpecFilter();
+    setupSectionNav();
+    setupScrollProgress();
+    setupLightbox();
+    setupPmPanorama();
+  </script>
+</body>
+</html>
