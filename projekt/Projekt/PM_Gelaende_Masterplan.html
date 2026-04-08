@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Werksgelände Masterplan – IST / SOLL</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #161b27;
+    --surface2: #1e2535;
+    --border: #2a3347;
+    --text: #e8ecf4;
+    --text-muted: #7a8aaa;
+    --accent: #3b7fff;
+
+    /* Building colors */
+    --existing: #2a3d5c;
+    --existing-border: #4a6a9c;
+    --existing-text: #b8cce8;
+    --new-red: #c0392b;
+    --new-red-border: #e74c3c;
+    --new-red-text: #ffd5d0;
+    --energy: #1a3a2a;
+    --energy-border: #2e7a4a;
+    --energy-text: #a8d8b8;
+    --storage: #2d2a1a;
+    --storage-border: #7a6a2a;
+    --storage-text: #e8d8a8;
+    --water-bldg: #0d2a3d;
+    --water-bldg-border: #1a6a9a;
+    --water-bldg-text: #88ccee;
+    --neutral: #222a38;
+    --neutral-border: #3a4a60;
+    --neutral-text: #9aaabb;
+
+    /* Flow colors */
+    --steam: #e8760a;
+    --freshwater: #1a5fa8;
+    --condensate: #5bb8e8;
+    --discharge: #2aaa66;
+    --river: #1a4a7a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .logo {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+  }
+  .title-block { text-align: center; }
+  .title-block h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
+  .title-block p { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+  .date-badge {
+    font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace;
+    border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px;
+  }
+
+  /* ── Tab bar ── */
+  .tabs {
+    display: flex; gap: 0; border-bottom: 1px solid var(--border);
+    background: var(--surface); padding: 0 40px;
+  }
+  .tab {
+    padding: 12px 24px; font-size: 13px; font-weight: 500; cursor: pointer;
+    color: var(--text-muted); border-bottom: 2px solid transparent;
+    transition: all 0.2s; user-select: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── Main layout ── */
+  .main { display: flex; height: calc(100vh - 110px); }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 260px; min-width: 260px; background: var(--surface);
+    border-right: 1px solid var(--border); overflow-y: auto;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .sidebar-section { border-bottom: 1px solid var(--border); }
+  .sidebar-section-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-muted); padding: 14px 20px 8px;
+  }
+  .sidebar-item {
+    padding: 9px 20px; font-size: 12px; cursor: pointer;
+    color: var(--text-muted); transition: all 0.15s; display: flex;
+    align-items: center; gap: 10px;
+  }
+  .sidebar-item:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-item.active { background: rgba(59,127,255,0.1); color: var(--accent); }
+  .sidebar-dot {
+    width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0;
+  }
+
+  /* ── Canvas area ── */
+  .canvas-wrap {
+    flex: 1; overflow: auto; padding: 30px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  /* ── Plan container ── */
+  .plan-outer {
+    display: flex; gap: 12px; align-items: flex-start;
+    min-width: 1200px;
+  }
+  .plan-label {
+    writing-mode: vertical-rl; text-orientation: mixed;
+    font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--text-muted); padding: 8px 0; align-self: stretch;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .plan-label.ist { color: #7ab8f5; }
+  .plan-label.soll { color: #e07070; }
+
+  .plan-half {
+    position: relative; border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden; background: #131825;
+  }
+
+  /* ── SVG canvas ── */
+  svg.layout { display: block; }
+
+  /* Building base style (applied via class in SVG) */
+  .bldg { cursor: pointer; transition: opacity 0.15s; }
+  .bldg:hover rect { filter: brightness(1.2); }
+  .bldg.highlighted rect { stroke-width: 2.5 !important; }
+  .bldg.dimmed { opacity: 0.35; }
+
+  /* Info panel */
+  .info-panel {
+    position: fixed; right: 24px; bottom: 24px;
+    width: 300px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    z-index: 100;
+  }
+  .info-panel.visible { opacity: 1; pointer-events: all; }
+  .info-panel h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .info-panel .dims { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); }
+  .info-panel p { font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.6; }
+  .info-panel .tag {
+    display: inline-block; font-size: 10px; font-family: 'DM Mono', monospace;
+    background: rgba(59,127,255,0.15); color: var(--accent);
+    border: 1px solid rgba(59,127,255,0.3); border-radius: 3px;
+    padding: 2px 7px; margin-top: 10px;
+  }
+  .info-close {
+    position: absolute; top: 12px; right: 14px; cursor: pointer;
+    color: var(--text-muted); font-size: 18px; line-height: 1;
+  }
+  .info-close:hover { color: var(--text); }
+
+  /* Legend */
+  .legend {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 16px 20px;
+    display: flex; flex-wrap: wrap; gap: 20px; min-width: 1200px;
+  }
+  .legend-group { display: flex; flex-direction: column; gap: 6px; }
+  .legend-title { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+  .legend-box { width: 16px; height: 16px; border-radius: 3px; border-width: 1.5px; border-style: solid; flex-shrink: 0; }
+  .legend-line { width: 28px; height: 3px; flex-shrink: 0; border-radius: 2px; }
+  .legend-line.dashed { background: repeating-linear-gradient(90deg, var(--discharge) 0, var(--discharge) 5px, transparent 5px, transparent 9px); height: 2px; }
+
+  /* Scalebar + North */
+  .map-extras { position: absolute; bottom: 12px; right: 14px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Werkslayout</div>
+  <div class="title-block">
+    <h1>Werksgelände Masterplan — Papiermaschine</h1>
+    <p>IST-Zustand · Umbau / SOLL-Zustand · Stoff- &amp; Medienströme</p>
+  </div>
+  <div class="date-badge">April 2025</div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="setTab('overview')">Gesamtübersicht</div>
+  <div class="tab" onclick="setTab('ist')">IST-Zustand</div>
+  <div class="tab" onclick="setTab('soll')">SOLL-Zustand</div>
+  <div class="tab" onclick="setTab('flows')">Medienströme</div>
+</div>
+
+<div class="main">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Produktion</div>
+      <div class="sidebar-item" onclick="highlight('papiermaschine')">
+        <div class="sidebar-dot" style="background:#6a4a9a;border:1px solid #9a6acc"></div> Papiermaschine
+      </div>
+      <div class="sidebar-item" onclick="highlight('stoffaufbereitung')">
+        <div class="sidebar-dot" style="background:#6a4a9a;border:1px solid #9a6acc"></div> Stoffaufbereitung
+      </div>
+      <div class="sidebar-item" onclick="highlight('anbau_stoff')">
+        <div class="sidebar-dot" style="background:var(--new-red);border:1px solid var(--new-red-border)"></div> Anbau Stoffaufbereitung
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Energie</div>
+      <div class="sidebar-item" onclick="highlight('kraftwerk_ist')">
+        <div class="sidebar-dot" style="background:#222;border:1px solid #555"></div> Steinkohle-Kraftwerk (IST)
+      </div>
+      <div class="sidebar-item" onclick="highlight('kraftwerk_soll')">
+        <div class="sidebar-dot" style="background:var(--new-red);border:1px solid var(--new-red-border)"></div> Biomasse Kraftwerk (SOLL)
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Lager</div>
+      <div class="sidebar-item" onclick="highlight('rollenlager')">
+        <div class="sidebar-dot" style="background:var(--existing);border:1px solid var(--existing-border)"></div> Fertigrollenlager
+      </div>
+      <div class="sidebar-item" onclick="highlight('altpapierlager')">
+        <div class="sidebar-dot" style="background:var(--new-red);border:1px solid var(--new-red-border)"></div> Altpapierlager
+      </div>
+      <div class="sidebar-item" onclick="highlight('zellstoff')">
+        <div class="sidebar-dot" style="background:var(--storage);border:1px solid var(--storage-border)"></div> Zellstofflager
+      </div>
+      <div class="sidebar-item" onclick="highlight('chemielager')">
+        <div class="sidebar-dot" style="background:var(--new-red);border:1px solid var(--new-red-border)"></div> Chemie Lager
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Versorgung</div>
+      <div class="sidebar-item" onclick="highlight('wasser')">
+        <div class="sidebar-dot" style="background:var(--water-bldg);border:1px solid var(--water-bldg-border)"></div> Wasseraufbereitung
+      </div>
+      <div class="sidebar-item" onclick="highlight('staerke')">
+        <div class="sidebar-dot" style="background:var(--existing);border:1px solid var(--existing-border)"></div> Stärke
+      </div>
+      <div class="sidebar-item" onclick="highlight('streichmassen')">
+        <div class="sidebar-dot" style="background:var(--new-red);border:1px solid var(--new-red-border)"></div> Streichmassen
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Sonstiges</div>
+      <div class="sidebar-item" onclick="highlight('ausruestung')">
+        <div class="sidebar-dot" style="background:var(--existing);border:1px solid var(--existing-border)"></div> Ausrüstung
+      </div>
+      <div class="sidebar-item" onclick="highlight('parkplatz')">
+        <div class="sidebar-dot" style="background:var(--neutral);border:1px solid var(--neutral-border)"></div> Parkplatz
+      </div>
+      <div class="sidebar-item" onclick="clearHighlight()">
+        <div class="sidebar-dot" style="background:var(--border);border:1px solid #555"></div> Auswahl aufheben
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="canvas-wrap" id="canvasWrap">
+    <div class="plan-outer">
+      <div class="plan-label ist">IST-Zustand</div>
+
+      <!-- IST SVG -->
+      <div class="plan-half" id="half-ist">
+        <svg class="layout" id="svg-ist" width="560" height="720" viewBox="0 0 560 720">
+          <defs>
+            <marker id="arr-orange" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#e8760a"/>
+            </marker>
+            <marker id="arr-darkblue" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#1a5fa8"/>
+            </marker>
+            <marker id="arr-lightblue" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#5bb8e8"/>
+            </marker>
+            <marker id="arr-green-dash" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#2aaa66"/>
+            </marker>
+          </defs>
+
+          <!-- ── Road / street at top ── -->
+          <rect x="0" y="0" width="560" height="28" fill="#1a2030"/>
+          <text x="280" y="17" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#4a6080" letter-spacing="2">STRASSE</text>
+
+          <!-- ── River strip (right edge of IST) ── -->
+          <rect x="510" y="0" width="50" height="720" fill="#0d2a40" opacity="0.8"/>
+          <rect x="510" y="0" width="50" height="720" fill="url(#river-lines)" opacity="0.3"/>
+          <text x="535" y="360" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#3a7ab8" writing-mode="vertical-rl" transform="rotate(180,535,360)" letter-spacing="1.5">FLUSS</text>
+          <!-- River waves decoration -->
+          <path d="M515,100 Q525,90 535,100 Q545,110 550,100" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <path d="M515,200 Q525,190 535,200 Q545,210 550,200" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <path d="M515,350 Q525,340 535,350 Q545,360 550,350" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <path d="M515,500 Q525,490 535,500 Q545,510 550,500" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <path d="M515,620 Q525,610 535,620 Q545,630 550,620" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+          <!-- ── Perimeter fence ── -->
+          <rect x="4" y="28" width="502" height="688" fill="none" stroke="#2a3347" stroke-width="1.5" rx="2"/>
+
+          <!-- Scale: 1m = 2px → 560px wide ≈ 280m real -->
+          <!-- Using 1m = 1.9px for IST (total width ~500px = 263m) -->
+
+          <!-- ══ BUILDINGS ══ -->
+
+          <!-- Steinkohle Kraftwerk 180x125m => 342x237px. Placed top-left -->
+          <g class="bldg" id="ist-kraftwerk_ist" onclick="showInfo('kraftwerk_ist')">
+            <rect x="8" y="32" width="228" height="158" rx="2" fill="#1a1f1a" stroke="#3a4a3a" stroke-width="1.5"/>
+            <text x="122" y="88" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#aaa" font-weight="500">Steinkohle-Kraftwerk</text>
+            <text x="122" y="103" text-anchor="middle" font-family="DM Mono" font-size="10" fill="#555">180 × 125 m</text>
+          </g>
+
+          <!-- Parkplatz 50x60m => 95x114px. Top right area -->
+          <g class="bldg" id="ist-parkplatz" onclick="showInfo('parkplatz')">
+            <rect x="242" y="32" width="95" height="114" rx="2" fill="#1e2535" stroke="#3a4a60" stroke-width="1.5"/>
+            <text x="289" y="88" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#7a8aaa">Parkplatz</text>
+            <text x="289" y="100" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#4a5a70">50 × 60 m</text>
+          </g>
+
+          <!-- Wasseraufbereitung 50x60m -->
+          <g class="bldg" id="ist-wasser" onclick="showInfo('wasser')">
+            <rect x="342" y="32" width="95" height="114" rx="2" fill="#0d2035" stroke="#1a5a80" stroke-width="1.5"/>
+            <text x="389" y="80" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#6ab8e8" font-weight="500">Wasser-</text>
+            <text x="389" y="93" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#6ab8e8" font-weight="500">aufbereitung</text>
+            <text x="389" y="106" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#2a6a90">50 × 60 m</text>
+          </g>
+
+          <!-- Freifläche 180x75m => top-left mid -->
+          <g class="bldg" id="ist-freiflaeche1" onclick="showInfo('freiflaeche')">
+            <rect x="8" y="194" width="228" height="95" rx="2" fill="#141c14" stroke="#2a3a2a" stroke-width="1" stroke-dasharray="4,3"/>
+            <text x="122" y="244" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#3a5a3a">Freifläche · 180 × 75 m</text>
+          </g>
+
+          <!-- Fertigrollenlager 120x60m -->
+          <g class="bldg" id="ist-rollenlager" onclick="showInfo('rollenlager')">
+            <rect x="242" y="150" width="228" height="114" rx="2" fill="#1a2a3d" stroke="#2a5080" stroke-width="1.5"/>
+            <text x="356" y="206" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#7aaae0" font-weight="500">Fertigrollenlager</text>
+            <text x="356" y="220" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#3a6090">120 × 60 m</text>
+          </g>
+
+          <!-- Papiermaschine 120x20m -->
+          <g class="bldg" id="ist-papiermaschine" onclick="showInfo('papiermaschine')">
+            <rect x="8" y="293" width="190" height="40" rx="2" fill="#2d1a50" stroke="#7a4aaa" stroke-width="1.5"/>
+            <text x="103" y="309" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#cc99ff" font-weight="600">Papiermaschine</text>
+            <text x="103" y="322" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#7a4a99">120 × 20 m</text>
+          </g>
+
+          <!-- T-Lager 35x20m -->
+          <g class="bldg" id="ist-tlager" onclick="showInfo('tlager')">
+            <rect x="202" y="293" width="66" height="40" rx="2" fill="#1e2535" stroke="#3a4a60" stroke-width="1.5"/>
+            <text x="235" y="309" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#7a8aaa">T-Lager</text>
+            <text x="235" y="322" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a5a70">35×20</text>
+          </g>
+
+          <!-- UR 20x20m -->
+          <g class="bldg" id="ist-ur" onclick="showInfo('ur')">
+            <rect x="270" y="293" width="38" height="40" rx="2" fill="#1e2535" stroke="#3a4a60" stroke-width="1.5"/>
+            <text x="289" y="309" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#7a8aaa">UR</text>
+            <text x="289" y="322" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a5a70">20×20</text>
+          </g>
+
+          <!-- Ausrüstung 120x100m -->
+          <g class="bldg" id="ist-ausruestung" onclick="showInfo('ausruestung')">
+            <rect x="312" y="268" width="190" height="160" rx="2" fill="#1a2035" stroke="#3a4a80" stroke-width="1.5"/>
+            <text x="407" y="338" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#8899cc" font-weight="500">Ausrüstung</text>
+            <text x="407" y="352" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#6677aa">(3 Querschneider +</text>
+            <text x="407" y="364" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#6677aa">Verpackung)</text>
+            <text x="407" y="378" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#3a4a70">120 × 100 m</text>
+          </g>
+
+          <!-- Stoffaufbereitung 120x50m -->
+          <g class="bldg" id="ist-stoffaufbereitung" onclick="showInfo('stoffaufbereitung')">
+            <rect x="8" y="337" width="190" height="79" rx="2" fill="#2d1a50" stroke="#7a4aaa" stroke-width="1.5"/>
+            <text x="103" y="374" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#cc99ff" font-weight="500">Stoffaufbereitung</text>
+            <text x="103" y="387" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#7a4a99">120 × 50 m</text>
+          </g>
+
+          <!-- Freifläche 50x50m (middle area) -->
+          <g class="bldg" id="ist-freiflaeche2" onclick="showInfo('freiflaeche')">
+            <rect x="202" y="337" width="106" height="79" rx="2" fill="#141c14" stroke="#2a3a2a" stroke-width="1" stroke-dasharray="4,3"/>
+            <text x="255" y="373" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#3a5a3a">Freifläche</text>
+            <text x="255" y="384" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#3a5a3a">50 × 50 m</text>
+          </g>
+
+          <!-- Stärke 50x25m -->
+          <g class="bldg" id="ist-staerke" onclick="showInfo('staerke')">
+            <rect x="202" y="420" width="95" height="47" rx="2" fill="#1a2535" stroke="#3a5080" stroke-width="1.5"/>
+            <text x="249" y="441" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#7aaae0">Stärke</text>
+            <text x="249" y="454" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#3a6090">50 × 25 m</text>
+          </g>
+
+          <!-- Zellstofflager 150x60m -->
+          <g class="bldg" id="ist-zellstoff" onclick="showInfo('zellstoff')">
+            <rect x="8" y="420" width="190" height="95" rx="2" fill="#2a200a" stroke="#6a5a1a" stroke-width="1.5"/>
+            <text x="103" y="462" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#cca830" font-weight="500">Zellstofflager (überdacht)</text>
+            <text x="103" y="475" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#7a6a2a">150 × 60 m</text>
+          </g>
+
+          <!-- Freifläche bottom right 120x60m -->
+          <g class="bldg" id="ist-freiflaeche3" onclick="showInfo('freiflaeche')">
+            <rect x="312" y="432" width="190" height="95" rx="2" fill="#141c14" stroke="#2a3a2a" stroke-width="1" stroke-dasharray="4,3"/>
+            <text x="407" y="479" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#3a5a3a">Freifläche</text>
+            <text x="407" y="491" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#3a5a3a">120 × 60 m</text>
+          </g>
+
+          <!-- Bottom open area -->
+          <rect x="8" y="519" width="494" height="193" fill="#101520" stroke="#1a2030" stroke-width="1" stroke-dasharray="3,4"/>
+          <text x="255" y="620" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#1a2535">Reservefläche</text>
+
+          <!-- ══ FLOW LINES – IST ══ -->
+          <!-- Steam/Gas (orange) from Kraftwerk to Papiermaschine – 2 parallel lines -->
+          <line x1="122" y1="190" x2="122" y2="275" stroke="#e8760a" stroke-width="3.5" marker-end="url(#arr-orange)" opacity="0.9"/>
+          <line x1="130" y1="190" x2="130" y2="275" stroke="#e8760a" stroke-width="3.5" marker-end="url(#arr-orange)" opacity="0.9"/>
+
+          <!-- Freshwater (dark blue) from river to Wasseraufbereitung -->
+          <line x1="510" y1="89" x2="440" y2="89" stroke="#1a5fa8" stroke-width="3" marker-end="url(#arr-darkblue)" opacity="0.9"/>
+
+          <!-- Freshwater from Wasseraufbereitung into plant -->
+          <polyline points="342,89 290,89 290,260" stroke="#1a5fa8" stroke-width="2.5" fill="none" marker-end="url(#arr-darkblue)" opacity="0.8"/>
+
+          <!-- Condensate/return (light blue) from PM back -->
+          <polyline points="103,293 103,260 460,260 460,148" stroke="#5bb8e8" stroke-width="2" fill="none" marker-end="url(#arr-lightblue)" opacity="0.7"/>
+
+          <!-- Discharge dashed (green) back to river from Wasseraufbereitung -->
+          <polyline points="437,89 490,89 510,89" stroke="#2aaa66" stroke-width="2" fill="none" stroke-dasharray="6,4" marker-end="url(#arr-green-dash)" opacity="0.7"/>
+
+          <!-- North arrow -->
+          <g transform="translate(468,580)">
+            <circle r="18" fill="#1e2535" stroke="#3a4a60" stroke-width="1"/>
+            <polygon points="0,-14 5,5 0,1 -5,5" fill="#5bb8e8"/>
+            <polygon points="0,14 5,-5 0,-1 -5,-5" fill="#3a4a60"/>
+            <text x="0" y="-18" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#5bb8e8">N</text>
+          </g>
+
+          <!-- Scale bar -->
+          <g transform="translate(330,610)">
+            <line x1="0" y1="0" x2="95" y2="0" stroke="#3a4a60" stroke-width="1.5"/>
+            <line x1="0" y1="-5" x2="0" y2="5" stroke="#3a4a60" stroke-width="1.5"/>
+            <line x1="47" y1="-3" x2="47" y2="3" stroke="#3a4a60" stroke-width="1.5"/>
+            <line x1="95" y1="-5" x2="95" y2="5" stroke="#3a4a60" stroke-width="1.5"/>
+            <text x="0" y="14" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a6080">0 m</text>
+            <text x="47" y="14" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a6080">50 m</text>
+            <text x="95" y="14" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a6080">100 m</text>
+          </g>
+
+          <!-- Zone labels -->
+          <rect x="8" y="28" width="228" height="12" fill="#1a1f1a" rx="0"/>
+          <text x="14" y="38" font-family="DM Mono" font-size="8" fill="#4a6a4a" letter-spacing="1.5">ENERGIE</text>
+
+          <rect x="242" y="28" width="265" height="12" fill="#0d1825" rx="0"/>
+          <text x="248" y="38" font-family="DM Mono" font-size="8" fill="#2a5a80" letter-spacing="1.5">VERSORGUNG · LAGER</text>
+
+          <rect x="8" y="289" width="500" height="12" fill="#1a0f28" rx="0"/>
+          <text x="14" y="299" font-family="DM Mono" font-size="8" fill="#6a3a99" letter-spacing="1.5">PRODUKTION</text>
+        </svg>
+      </div>
+
+      <!-- Divider -->
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 4px;align-self:stretch;">
+        <div style="width:1px;flex:1;background:linear-gradient(to bottom, transparent, #3b7fff 30%, #3b7fff 70%, transparent)"></div>
+        <div style="font-size:10px;font-family:'DM Mono',monospace;color:#3b7fff;letter-spacing:2px;writing-mode:vertical-rl;padding:12px 0;">UMBAU</div>
+        <div style="width:1px;flex:1;background:linear-gradient(to bottom, transparent, #3b7fff 30%, #3b7fff 70%, transparent)"></div>
+      </div>
+
+      <div class="plan-label soll">SOLL-Zustand</div>
+
+      <!-- SOLL SVG -->
+      <div class="plan-half" id="half-soll">
+        <svg class="layout" id="svg-soll" width="560" height="720" viewBox="0 0 560 720">
+          <defs>
+            <marker id="sarr-orange" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#e8760a"/>
+            </marker>
+            <marker id="sarr-darkblue" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#1a5fa8"/>
+            </marker>
+            <marker id="sarr-lightblue" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#5bb8e8"/>
+            </marker>
+            <marker id="sarr-green" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+              <polygon points="0 0, 7 3.5, 0 7" fill="#2aaa66"/>
+            </marker>
+          </defs>
+
+          <!-- Road -->
+          <rect x="0" y="0" width="560" height="28" fill="#1a2030"/>
+          <text x="280" y="17" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#4a6080" letter-spacing="2">STRASSE</text>
+
+          <!-- River -->
+          <rect x="510" y="0" width="50" height="720" fill="#0d2a40" opacity="0.8"/>
+          <text x="535" y="360" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#3a7ab8" writing-mode="vertical-rl" transform="rotate(180,535,360)" letter-spacing="1.5">FLUSS</text>
+          <path d="M515,100 Q525,90 535,100 Q545,110 550,100" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <path d="M515,200 Q525,190 535,200 Q545,210 550,200" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <path d="M515,350 Q525,340 535,350 Q545,360 550,350" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <path d="M515,500 Q525,490 535,500 Q545,510 550,500" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <path d="M515,620 Q525,610 535,620 Q545,630 550,620" stroke="#2a6a9a" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+          <!-- Perimeter -->
+          <rect x="4" y="28" width="502" height="688" fill="none" stroke="#2a3347" stroke-width="1.5" rx="2"/>
+
+          <!-- ══ SOLL BUILDINGS ══ -->
+
+          <!-- Biomasse Kraftwerk (NEU=ROT) 180x125m -->
+          <g class="bldg" id="soll-kraftwerk_soll" onclick="showInfo('kraftwerk_soll')">
+            <rect x="8" y="32" width="228" height="158" rx="2" fill="#3d0f0f" stroke="#c0392b" stroke-width="2"/>
+            <text x="122" y="80" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#ffb0a8" font-weight="600">Biomasse Kraftwerk</text>
+            <text x="122" y="95" text-anchor="middle" font-family="DM Mono" font-size="10" fill="#882020">180 × 125 m</text>
+            <!-- NEW badge -->
+            <rect x="148" y="108" width="66" height="16" rx="3" fill="#c0392b" opacity="0.9"/>
+            <text x="181" y="120" text-anchor="middle" font-family="DM Mono" font-size="9" fill="white" letter-spacing="1">UMBAU</text>
+          </g>
+
+          <!-- Parkplatz -->
+          <g class="bldg" id="soll-parkplatz" onclick="showInfo('parkplatz')">
+            <rect x="242" y="32" width="95" height="114" rx="2" fill="#1e2535" stroke="#3a4a60" stroke-width="1.5"/>
+            <text x="289" y="88" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#7a8aaa">Parkplatz</text>
+            <text x="289" y="100" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#4a5a70">50 × 60 m</text>
+          </g>
+
+          <!-- Wasseraufbereitung (EXISTING) -->
+          <g class="bldg" id="soll-wasser" onclick="showInfo('wasser')">
+            <rect x="342" y="32" width="95" height="114" rx="2" fill="#0d2035" stroke="#1a5a80" stroke-width="1.5"/>
+            <text x="389" y="80" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#6ab8e8" font-weight="500">Wasser-</text>
+            <text x="389" y="93" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#6ab8e8" font-weight="500">aufbereitung</text>
+            <text x="389" y="106" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#2a6a90">50 × 60 m</text>
+          </g>
+
+          <!-- Fertigrollenlager (EXISTING) -->
+          <g class="bldg" id="soll-rollenlager" onclick="showInfo('rollenlager')">
+            <rect x="242" y="150" width="228" height="114" rx="2" fill="#1a2a3d" stroke="#2a5080" stroke-width="1.5"/>
+            <text x="356" y="206" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#7aaae0" font-weight="500">Fertigrollenlager</text>
+            <text x="356" y="220" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#3a6090">120 × 60 m</text>
+          </g>
+
+          <!-- Umbau Papiermaschine (ROT) -->
+          <g class="bldg" id="soll-papiermaschine" onclick="showInfo('papiermaschine')">
+            <rect x="8" y="268" width="190" height="40" rx="2" fill="#3d0f28" stroke="#c0392b" stroke-width="2"/>
+            <text x="103" y="284" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#ffb0c8" font-weight="600">Umbau Papiermaschine</text>
+            <text x="103" y="297" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#882040">120 × 20 m</text>
+          </g>
+
+          <!-- T-Lager (EXISTING) -->
+          <g class="bldg" id="soll-tlager" onclick="showInfo('tlager')">
+            <rect x="202" y="268" width="66" height="40" rx="2" fill="#1e2535" stroke="#3a4a60" stroke-width="1.5"/>
+            <text x="235" y="284" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#7a8aaa">T-Lager</text>
+            <text x="235" y="297" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a5a70">35×20</text>
+          </g>
+
+          <!-- UR (EXISTING) -->
+          <g class="bldg" id="soll-ur" onclick="showInfo('ur')">
+            <rect x="270" y="268" width="38" height="40" rx="2" fill="#1e2535" stroke="#3a4a60" stroke-width="1.5"/>
+            <text x="289" y="284" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#7a8aaa">UR</text>
+            <text x="289" y="297" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a5a70">20×20</text>
+          </g>
+
+          <!-- Ausrüstung (EXISTING) -->
+          <g class="bldg" id="soll-ausruestung" onclick="showInfo('ausruestung')">
+            <rect x="312" y="243" width="190" height="160" rx="2" fill="#1a2035" stroke="#3a4a80" stroke-width="1.5"/>
+            <text x="407" y="313" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#8899cc" font-weight="500">Ausrüstung</text>
+            <text x="407" y="327" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#6677aa">(3 Querschneider +</text>
+            <text x="407" y="339" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#6677aa">Verpackung)</text>
+            <text x="407" y="353" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#3a4a70">120 × 100 m</text>
+          </g>
+
+          <!-- Stoffaufbereitung (EXISTING) -->
+          <g class="bldg" id="soll-stoffaufbereitung" onclick="showInfo('stoffaufbereitung')">
+            <rect x="8" y="312" width="190" height="79" rx="2" fill="#2d1a50" stroke="#7a4aaa" stroke-width="1.5"/>
+            <text x="103" y="349" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#cc99ff" font-weight="500">Stoffaufbereitung</text>
+            <text x="103" y="362" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#7a4a99">120 × 50 m</text>
+          </g>
+
+          <!-- Anbau Stoffaufbereitung (NEU=ROT) 50x50m -->
+          <g class="bldg" id="soll-anbau_stoff" onclick="showInfo('anbau_stoff')">
+            <rect x="202" y="312" width="106" height="95" rx="2" fill="#3d1020" stroke="#c0392b" stroke-width="2"/>
+            <text x="255" y="352" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#ffb0c8" font-weight="600">Anbau Stoff-</text>
+            <text x="255" y="364" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#ffb0c8" font-weight="600">aufbereitung</text>
+            <text x="255" y="376" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#882040">50 × 50 m</text>
+            <rect x="216" y="388" width="76" height="14" rx="3" fill="#c0392b" opacity="0.9"/>
+            <text x="254" y="399" text-anchor="middle" font-family="DM Mono" font-size="8" fill="white" letter-spacing="1">NEU</text>
+          </g>
+
+          <!-- Altpapierlager (NEU=ROT) 150x60m -->
+          <g class="bldg" id="soll-altpapierlager" onclick="showInfo('altpapierlager')">
+            <rect x="8" y="395" width="228" height="95" rx="2" fill="#3d1510" stroke="#c0392b" stroke-width="2"/>
+            <text x="122" y="437" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#ffb0a8" font-weight="600">Altpapierlager</text>
+            <text x="122" y="452" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#882020">150 × 60 m</text>
+            <rect x="148" y="462" width="52" height="14" rx="3" fill="#c0392b" opacity="0.9"/>
+            <text x="174" y="473" text-anchor="middle" font-family="DM Mono" font-size="8" fill="white" letter-spacing="1">NEU</text>
+          </g>
+
+          <!-- Stärke (EXISTING) -->
+          <g class="bldg" id="soll-staerke" onclick="showInfo('staerke')">
+            <rect x="242" y="407" width="95" height="47" rx="2" fill="#1a2535" stroke="#3a5080" stroke-width="1.5"/>
+            <text x="289" y="428" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#7aaae0">Stärke</text>
+            <text x="289" y="441" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#3a6090">50 × 25 m</text>
+          </g>
+
+          <!-- Chemie Lager (NEU=ROT) 60x60m -->
+          <g class="bldg" id="soll-chemielager" onclick="showInfo('chemielager')">
+            <rect x="312" y="407" width="95" height="95" rx="2" fill="#3d1010" stroke="#c0392b" stroke-width="2"/>
+            <text x="359" y="449" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#ffb0a8" font-weight="600">Chemie</text>
+            <text x="359" y="462" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#ffb0a8" font-weight="600">Lager</text>
+            <text x="359" y="475" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#882020">60 × 60 m</text>
+          </g>
+
+          <!-- Streichmassen Aufbereitung (NEU=ROT) 60x60m -->
+          <g class="bldg" id="soll-streichmassen" onclick="showInfo('streichmassen')">
+            <rect x="411" y="407" width="95" height="95" rx="2" fill="#3d1010" stroke="#c0392b" stroke-width="2"/>
+            <text x="458" y="445" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#ffb0a8" font-weight="600">Streichmassen-</text>
+            <text x="458" y="458" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#ffb0a8" font-weight="600">Aufbereitung</text>
+            <text x="458" y="471" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#882020">60 × 60 m</text>
+          </g>
+
+          <!-- Bottom expansion area -->
+          <rect x="8" y="494" width="494" height="218" fill="#1a0f0f" stroke="#4a1010" stroke-width="1" stroke-dasharray="5,4"/>
+          <text x="255" y="580" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#6a2020" font-weight="500">Erweiterungsfläche</text>
+          <text x="255" y="596" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#4a1010">Zukünftige Ausbaustufen</text>
+          <rect x="205" y="608" width="100" height="14" rx="3" fill="#3d1010" stroke="#882020" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="255" y="619" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#c0392b" letter-spacing="1">GEPLANT</text>
+
+          <!-- ══ FLOW LINES – SOLL ══ -->
+          <!-- Steam (orange) – 2 parallel lines from Biomasse Kraftwerk to PM -->
+          <line x1="118" y1="190" x2="118" y2="250" stroke="#e8760a" stroke-width="3.5" marker-end="url(#sarr-orange)" opacity="0.9"/>
+          <line x1="128" y1="190" x2="128" y2="250" stroke="#e8760a" stroke-width="3.5" marker-end="url(#sarr-orange)" opacity="0.9"/>
+
+          <!-- Freshwater (dark blue) from river to Wasseraufbereitung -->
+          <line x1="510" y1="89" x2="440" y2="89" stroke="#1a5fa8" stroke-width="3" marker-end="url(#sarr-darkblue)" opacity="0.9"/>
+
+          <!-- Freshwater into plant -->
+          <polyline points="342,89 290,89 290,244" stroke="#1a5fa8" stroke-width="2.5" fill="none" marker-end="url(#sarr-darkblue)" opacity="0.8"/>
+
+          <!-- Condensate return (light blue) -->
+          <polyline points="103,268 103,238 460,238 460,148" stroke="#5bb8e8" stroke-width="2" fill="none" marker-end="url(#sarr-lightblue)" opacity="0.7"/>
+
+          <!-- Discharge dashed (green) from Wasseraufbereitung back to river -->
+          <polyline points="437,89 490,89 510,100" stroke="#2aaa66" stroke-width="2" fill="none" stroke-dasharray="6,4" marker-end="url(#sarr-green)" opacity="0.8"/>
+
+          <!-- North arrow -->
+          <g transform="translate(468,555)">
+            <circle r="18" fill="#1e2535" stroke="#3a4a60" stroke-width="1"/>
+            <polygon points="0,-14 5,5 0,1 -5,5" fill="#5bb8e8"/>
+            <polygon points="0,14 5,-5 0,-1 -5,-5" fill="#3a4a60"/>
+            <text x="0" y="-18" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#5bb8e8">N</text>
+          </g>
+
+          <!-- Scale bar -->
+          <g transform="translate(330,585)">
+            <line x1="0" y1="0" x2="95" y2="0" stroke="#3a4a60" stroke-width="1.5"/>
+            <line x1="0" y1="-5" x2="0" y2="5" stroke="#3a4a60" stroke-width="1.5"/>
+            <line x1="47" y1="-3" x2="47" y2="3" stroke="#3a4a60" stroke-width="1.5"/>
+            <line x1="95" y1="-5" x2="95" y2="5" stroke="#3a4a60" stroke-width="1.5"/>
+            <text x="0" y="14" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a6080">0 m</text>
+            <text x="47" y="14" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a6080">50 m</text>
+            <text x="95" y="14" text-anchor="middle" font-family="DM Mono" font-size="8" fill="#4a6080">100 m</text>
+          </g>
+
+          <!-- Zone labels -->
+          <rect x="8" y="28" width="228" height="12" fill="#2a0808" rx="0"/>
+          <text x="14" y="38" font-family="DM Mono" font-size="8" fill="#8a2020" letter-spacing="1.5">ENERGIE · UMBAU</text>
+
+          <rect x="242" y="28" width="265" height="12" fill="#0d1825" rx="0"/>
+          <text x="248" y="38" font-family="DM Mono" font-size="8" fill="#2a5a80" letter-spacing="1.5">VERSORGUNG · LAGER</text>
+
+          <rect x="8" y="264" width="500" height="12" fill="#250818" rx="0"/>
+          <text x="14" y="274" font-family="DM Mono" font-size="8" fill="#8a2040" letter-spacing="1.5">PRODUKTION · UMBAU</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-group">
+        <div class="legend-title">Gebäudestatus</div>
+        <div class="legend-item">
+          <div class="legend-box" style="background:#1a2a3d;border-color:#2a5080"></div> Bestand (unverändert)
+        </div>
+        <div class="legend-item">
+          <div class="legend-box" style="background:#3d0f0f;border-color:#c0392b"></div> Umbau / Neubau (SOLL)
+        </div>
+        <div class="legend-item">
+          <div class="legend-box" style="background:#141c14;border-color:#2a3a2a;border-style:dashed"></div> Freifläche / Reserve
+        </div>
+      </div>
+      <div class="legend-group">
+        <div class="legend-title">Medienströme</div>
+        <div class="legend-item">
+          <div style="width:28px;height:4px;background:#e8760a;border-radius:2px;flex-shrink:0"></div> Dampf / Gas (2-strangig)
+        </div>
+        <div class="legend-item">
+          <div style="width:28px;height:3px;background:#1a5fa8;border-radius:2px;flex-shrink:0"></div> Frischwasser (Fluss → Anlage)
+        </div>
+        <div class="legend-item">
+          <div style="width:28px;height:2px;background:#5bb8e8;border-radius:2px;flex-shrink:0"></div> Kondensat / Wasserrückführung
+        </div>
+        <div class="legend-item">
+          <div class="legend-line dashed" style="--discharge:#2aaa66"></div> Einleitung in Fluss (gestrichelt)
+        </div>
+      </div>
+      <div class="legend-group">
+        <div class="legend-title">Zonierung</div>
+        <div class="legend-item"><div class="legend-box" style="background:#1a1f1a;border-color:#3a4a3a"></div> Energie</div>
+        <div class="legend-item"><div class="legend-box" style="background:#2d1a50;border-color:#7a4aaa"></div> Produktion</div>
+        <div class="legend-item"><div class="legend-box" style="background:#0d2035;border-color:#1a5a80"></div> Wasserversorgung</div>
+        <div class="legend-item"><div class="legend-box" style="background:#2a200a;border-color:#6a5a1a"></div> Rohstofflager</div>
+        <div class="legend-item"><div class="legend-box" style="background:#1e2535;border-color:#3a4a60"></div> Sonstiges / Lager</div>
+      </div>
+      <div class="legend-group" style="margin-left:auto">
+        <div class="legend-title">Interaktion</div>
+        <div style="font-size:11px;color:var(--text-muted);line-height:1.7">
+          ▶ Gebäude anklicken → Detailinfo<br>
+          ▶ Sidebar → Bereich hervorheben<br>
+          ▶ Tabs oben → Ansicht wechseln
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Info Panel -->
+<div class="info-panel" id="infoPanel">
+  <div class="info-close" onclick="closeInfo()">×</div>
+  <h3 id="infoTitle">—</h3>
+  <div class="dims" id="infoDims"></div>
+  <p id="infoDesc"></p>
+  <div class="tag" id="infoId"></div>
+</div>
+
+<script>
+const INFO = {
+  kraftwerk_ist: {
+    title: 'Steinkohle-Kraftwerk',
+    dims: '180 × 125 m',
+    desc: 'Bestehendes fossiles Kraftwerk zur Dampf- und Stromerzeugung. Im SOLL-Zustand wird dieses durch ein Biomasse-Kraftwerk ersetzt.',
+    id: 'area_kraftwerk_ist'
+  },
+  kraftwerk_soll: {
+    title: 'Biomasse Kraftwerk',
+    dims: '180 × 125 m',
+    desc: 'Neues Biomasse-Kraftwerk ersetzt die Steinkohleanlage. Reduziert CO₂-Emissionen signifikant. Versorgt Papiermaschine mit Dampf über zwei parallele Leitungen.',
+    id: 'area_biomasse_kraftwerk'
+  },
+  papiermaschine: {
+    title: 'Papiermaschine (Umbau)',
+    dims: '120 × 20 m',
+    desc: 'Kernanlage der Produktion. Umbaumaßnahmen umfassen Erneuerung der Dampfversorgung sowie Integration der erweiterten Stoffaufbereitung.',
+    id: 'area_papiermaschine'
+  },
+  stoffaufbereitung: {
+    title: 'Stoffaufbereitung',
+    dims: '120 × 50 m',
+    desc: 'Bestehende Anlage zur Aufbereitung von Zellstoff und Altpapier. Wird durch Anbau erweitert.',
+    id: 'area_stoffaufbereitung'
+  },
+  anbau_stoff: {
+    title: 'Anbau Stoffaufbereitung',
+    dims: '50 × 50 m',
+    desc: 'Neubau zur Erweiterung der Stoffaufbereitungskapazität. Ermöglicht höheren Altpapier-Einsatz.',
+    id: 'area_anbau_stoffaufbereitung'
+  },
+  rollenlager: {
+    title: 'Fertigrollenlager',
+    dims: '120 × 60 m',
+    desc: 'Lagerung der fertig produzierten Papierrollen vor dem Versand. Bestand, keine Änderung.',
+    id: 'area_fertigrollenlager'
+  },
+  altpapierlager: {
+    title: 'Altpapierlager',
+    dims: '150 × 60 m',
+    desc: 'Neues Lager für Altpapier als Rohstoff. Voraussetzung für den erhöhten Rezyklat-Anteil im SOLL-Zustand.',
+    id: 'area_altpapierlager'
+  },
+  zellstoff: {
+    title: 'Zellstofflager (überdacht)',
+    dims: '150 × 60 m',
+    desc: 'Überdachtes Lager für Zellstoff-Ballen. Schutz vor Witterungseinflüssen. Bestandsgebäude.',
+    id: 'area_zellstofflager'
+  },
+  wasser: {
+    title: 'Wasseraufbereitung',
+    dims: '50 × 60 m',
+    desc: 'Aufbereitung von Frischwasser aus dem Fluss für den Produktionsprozess. Gereinigtes Wasser wird als Kondensat zurückgeführt und teilweise wieder in den Fluss eingeleitet (gestrichelt).',
+    id: 'area_wasseraufbereitung'
+  },
+  staerke: {
+    title: 'Stärke',
+    dims: '50 × 25 m',
+    desc: 'Stärkeversorgung für die Papiermaschine (Oberflächenleimung). Bestandsanlage.',
+    id: 'area_staerke'
+  },
+  streichmassen: {
+    title: 'Streichmassen-Aufbereitung',
+    dims: '60 × 60 m',
+    desc: 'Neubau für die Aufbereitung von Streichmassen für beschichtete Papiersorten. Erweiterung des Produktportfolios.',
+    id: 'area_streichmassen'
+  },
+  chemielager: {
+    title: 'Chemie Lager',
+    dims: '60 × 60 m',
+    desc: 'Neues Lager für Prozesschemikalien (Streichmassen, Hilfsstoffe). Entspricht aktuellen Sicherheits- und Umweltstandards.',
+    id: 'area_chemielager'
+  },
+  ausruestung: {
+    title: 'Ausrüstung',
+    dims: '120 × 100 m',
+    desc: '3 Querschneider + Verpackungsanlage. Bestandsgebäude, keine Änderung im Umbau.',
+    id: 'area_ausruestung'
+  },
+  parkplatz: {
+    title: 'Parkplatz',
+    dims: '50 × 60 m',
+    desc: 'Mitarbeiterparkplatz. Bestand, keine Änderung.',
+    id: 'area_parkplatz'
+  },
+  tlager: {
+    title: 'T-Lager',
+    dims: '35 × 20 m',
+    desc: 'Technik-Lager. Bestandsgebäude.',
+    id: 'area_tlager'
+  },
+  ur: {
+    title: 'UR',
+    dims: '20 × 20 m',
+    desc: 'Umrichterraum / Technikraum. Bestand.',
+    id: 'area_ur'
+  },
+  freiflaeche: {
+    title: 'Freifläche',
+    dims: '—',
+    desc: 'Unbebaute Reservefläche für zukünftige Erweiterungen oder Logistik.',
+    id: 'area_freiflaeche'
+  }
+};
+
+function showInfo(key) {
+  const d = INFO[key];
+  if (!d) return;
+  document.getElementById('infoTitle').textContent = d.title;
+  document.getElementById('infoDims').textContent = d.dims;
+  document.getElementById('infoDesc').textContent = d.desc;
+  document.getElementById('infoId').textContent = d.id;
+  document.getElementById('infoPanel').classList.add('visible');
+}
+
+function closeInfo() {
+  document.getElementById('infoPanel').classList.remove('visible');
+}
+
+function highlight(key) {
+  document.querySelectorAll('.bldg').forEach(el => {
+    const id = el.id.replace('ist-','').replace('soll-','');
+    if (id === key) {
+      el.classList.add('highlighted');
+      el.classList.remove('dimmed');
+    } else {
+      el.classList.add('dimmed');
+      el.classList.remove('highlighted');
+    }
+  });
+  if (INFO[key]) showInfo(key);
+}
+
+function clearHighlight() {
+  document.querySelectorAll('.bldg').forEach(el => {
+    el.classList.remove('highlighted', 'dimmed');
+  });
+  closeInfo();
+}
+
+function setTab(tab) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.remove('active');
+    if (['overview','ist','soll','flows'][i] === tab) t.classList.add('active');
+  });
+  const ist = document.getElementById('half-ist');
+  const soll = document.getElementById('half-soll');
+  switch(tab) {
+    case 'ist':
+      ist.style.opacity='1'; soll.style.opacity='0.2';
+      break;
+    case 'soll':
+      ist.style.opacity='0.2'; soll.style.opacity='1';
+      break;
+    case 'flows':
+      ist.style.opacity='0.5'; soll.style.opacity='0.5';
+      // highlight flow lines by pulsing them
+      break;
+    default:
+      ist.style.opacity='1'; soll.style.opacity='1';
+  }
+}
+</script>
+</body>
+</html>
