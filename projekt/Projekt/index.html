@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pitch Deck – Nachhaltiger Umbau Papierfabrik</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">UNI PROJEKT · PAPIERFABRIK</div>
+    <nav class="main-nav">
+      <button data-section="intro" class="active">Intro</button>
+      <button data-section="werk">Werk</button>
+      <button data-section="technologie">Technologie</button>
+      <button data-section="nachhaltigkeit">Nachhaltigkeit</button>
+      <button data-section="wirtschaftlichkeit">Wirtschaftlichkeit</button>
+      <button data-section="team">Team</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="intro" class="section active">
+      <article class="cover card">
+        <p class="eyebrow">Nachhaltiger Umbau einer Papierfabrik</p>
+        <h1>Innovation und Energieeffizienz in einem integrierten Werkskonzept</h1>
+        <p class="muted">Konzept 1 aus Aufgabenstellung: Biomassebasierte Energieversorgung, Recyclingfaser, Slot-Die-Coating und Effizienzsteigerung als kombinierter Umbaupfad.</p>
+      </article>
+      <article class="card">
+        <h2>Executive Summary</h2>
+        <ul class="summary-list" id="execSummary"></ul>
+      </article>
+    </section>
+
+    <section id="werk" class="section">
+      <div class="subnav card">
+        <button class="subnav-btn active" data-tab="overview">Übersicht</button>
+        <button class="subnav-btn" data-tab="ist">IST</button>
+        <button class="subnav-btn" data-tab="soll">SOLL</button>
+        <button class="subnav-btn" data-tab="flows">Flows</button>
+      </div>
+
+      <article class="card">
+        <h2>KPI Vergleich Bestand vs. Umbau</h2>
+        <div id="kpiGrid" class="kpi-grid"></div>
+      </article>
+
+      <article class="card">
+        <h2>Interaktiver Lageplan (integrierte Bestands-HTML)</h2>
+        <p class="muted">Die bestehende Datei <code>PM_Gelaende_Masterplan.html</code> bleibt als interaktive Kernansicht erhalten; die Subnavigation steuert direkt deren IST/SOLL/Flow-Modi.</p>
+        <iframe id="masterplanFrame" src="PM_Gelaende_Masterplan.html" title="Masterplan"></iframe>
+      </article>
+
+      <article class="card">
+        <h2>Bestand vs. Umbau – Grundstücksplan</h2>
+        <div class="img-compare">
+          <figure>
+            <img src="Bestand_Grundstücksplan.png" alt="Bestandsplan" />
+            <figcaption>Bestand</figcaption>
+          </figure>
+          <figure>
+            <img src="Umbau_Grundstücksplan%20.png" alt="Umbauplan" />
+            <figcaption>Umbau</figcaption>
+          </figure>
+        </div>
+      </article>
+    </section>
+
+    <section id="technologie" class="section">
+      <article class="card">
+        <h2>Produktaufbau (Layer-Diagramm)</h2>
+        <svg id="layerSvg" viewBox="0 0 840 260" aria-label="Layer Diagramm"></svg>
+      </article>
+      <article class="card two-col">
+        <div>
+          <h2>Slot Die Coating</h2>
+          <p>Der Slot-Die-Auftrag ermöglicht eine reproduzierbare Schichtdicke, reduziert Variabilität über die Bahnbreite und stabilisiert die Barrierefunktion bei höherer Liniengeschwindigkeit.</p>
+          <p class="muted">Prozessziel: kontrollierte, dünne Funktionsschichten mit geringer Streuung und minimiertem Materialüberschuss.</p>
+        </div>
+        <div>
+          <h3>Strichrezepturen nach Funktion</h3>
+          <div id="coatingGroups" class="stack"></div>
+        </div>
+      </article>
+    </section>
+
+    <section id="nachhaltigkeit" class="section">
+      <article class="card two-col">
+        <div>
+          <h2>Product Carbon Footprint</h2>
+          <p><strong>Systemgrenze:</strong> <span id="pcfScope"></span></p>
+          <p id="pcfText"></p>
+          <div id="pcfDrivers" class="pill-row"></div>
+        </div>
+        <div>
+          <h3>Treiberwirkung im Umbau</h3>
+          <svg viewBox="0 0 420 230" class="mini-chart" aria-label="PCF Treiber">
+            <line x1="40" y1="20" x2="40" y2="200" />
+            <line x1="40" y1="200" x2="390" y2="200" />
+            <rect x="70" y="60" width="50" height="140" class="bar old"></rect>
+            <rect x="145" y="95" width="50" height="105" class="bar new"></rect>
+            <rect x="220" y="85" width="50" height="115" class="bar new"></rect>
+            <rect x="295" y="130" width="50" height="70" class="bar new"></rect>
+            <text x="78" y="215">Energie</text>
+            <text x="148" y="215">Rohstoff</text>
+            <text x="230" y="215">Chemie</text>
+            <text x="304" y="215">Wasser</text>
+          </svg>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Wasser- und Ressourceneffizienz</h2>
+        <div class="two-col">
+          <div>
+            <ul id="waterMeasures" class="summary-list"></ul>
+          </div>
+          <div class="metric-box" id="waterMetric"></div>
+        </div>
+      </article>
+    </section>
+
+    <section id="wirtschaftlichkeit" class="section">
+      <article class="card">
+        <h2>CAPEX-Blöcke</h2>
+        <div id="capexBlocks" class="capex-grid"></div>
+      </article>
+      <article class="card two-col">
+        <div>
+          <h2>OPEX Strukturvergleich</h2>
+          <table>
+            <thead><tr><th>Position</th><th>Bestand</th><th>Umbau</th></tr></thead>
+            <tbody id="opexTable"></tbody>
+          </table>
+        </div>
+        <div>
+          <h2>Investitionslogik</h2>
+          <p id="investmentLogic"></p>
+          <p class="muted">Leitlogik: mehr Output, höherwertiges Spezialpapier und geringere strukturelle Risikoexposition im Betrieb.</p>
+        </div>
+      </article>
+    </section>
+
+    <section id="team" class="section">
+      <article class="card">
+        <h2>Team (4 Rollen)</h2>
+        <div class="team-grid">
+          <div><h3>Prozessintegration</h3><p>Papiermaschine, Stoffaufbereitung und Medienkopplung.</p></div>
+          <div><h3>Energie & Utilities</h3><p>Biomassekraftwerk, Dampfnetz und Wasserführung.</p></div>
+          <div><h3>Produkt & Technologie</h3><p>Slot-Die-Coating, Rezeptur und Qualitätsziele.</p></div>
+          <div><h3>Wirtschaft & Nachhaltigkeit</h3><p>PCF, CAPEX/OPEX, Investitions- und Risikoargumentation.</p></div>
+        </div>
+      </article>
+      <article class="card">
+        <h2>Roadmap</h2>
+        <ol class="roadmap">
+          <li><strong>Q1–Q2:</strong> Basic Engineering, Genehmigungs- und Beschaffungspakete.</li>
+          <li><strong>Q3–Q4:</strong> Infrastruktur und Energieumbau, parallele Bestandsproduktion.</li>
+          <li><strong>Q5:</strong> Inbetriebnahme Slot-Die und Aufbereitungslinie, Performance Ramp-up.</li>
+          <li><strong>Q6:</strong> Stabilbetrieb, OPEX-Optimierung und PCF-Nachweis je Produkttyp.</li>
+        </ol>
+      </article>
+    </section>
+  </main>
+
+  <aside id="detailPanel" class="detail-panel" aria-live="polite">
+    <button id="closeDetail">×</button>
+    <h3 id="detailTitle"></h3>
+    <p><strong>Funktion im System:</strong> <span id="detailSystem"></span></p>
+    <p><strong>Umbauänderung:</strong> <span id="detailChange"></span></p>
+    <p><strong>Nachhaltigkeitsbeitrag:</strong> <span id="detailSustainability"></span></p>
+    <p><strong>Wirtschaftliche Relevanz:</strong> <span id="detailEconomy"></span></p>
+    <div class="img-compare">
+      <img id="detailImageMain" alt="Detailbild" />
+      <img id="detailImageAlt" alt="Vergleichsbild" />
+    </div>
+  </aside>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

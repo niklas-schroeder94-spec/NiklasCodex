@@ -1,0 +1,102 @@
+{
+  "kpi": [
+    {"label":"Netto-Produktion", "bestand":327.5, "umbau":512.5, "unit":"t/d"},
+    {"label":"Maschinengeschwindigkeit netto", "bestand":1215, "umbau":1488, "unit":"m/min"},
+    {"label":"Spezifischer Wasserbedarf", "bestand":12.0, "umbau":10.18, "unit":"m³/t"},
+    {"label":"Spezifischer Energiebedarf", "bestand":1800, "umbau":1659, "unit":"kWh/t"}
+  ],
+  "productLayers": [
+    {"name":"Recyclingfaser", "value":38, "unit":"g/m²", "role":"Tragstruktur"},
+    {"name":"Primer oben + unten", "value":4, "unit":"g/m²", "role":"Anbindung der Barriereschichten"},
+    {"name":"Barrierestrich oben + unten", "value":8, "unit":"g/m²", "role":"Fett-, Wasserdampf- und O₂-Barriere"}
+  ],
+  "coatingFunctions": [
+    {
+      "group":"Primer",
+      "components":["Kartoffelstärke", "Alginat", "Entschäumer", "Verdicker"],
+      "function":"Filmbildung, Haftung und gleichmäßiger Auftrag"
+    },
+    {
+      "group":"Hitzebarriere",
+      "components":["PHA", "PVOH", "Citrat"],
+      "function":"Stabilität bei thermischer Belastung"
+    },
+    {
+      "group":"MOH-Barriere",
+      "components":["Chitosan", "PVOH", "Glycerin"],
+      "function":"Reduktion von Öl-/Mineralöl-Migration"
+    },
+    {
+      "group":"Top-Coat",
+      "components":["AKD", "Acrylatbinder", "Shellac", "Slipadditiv"],
+      "function":"Hydrophobie, Gleitverhalten und Oberflächenqualität"
+    }
+  ],
+  "pcf": {
+    "scope":"cradle to gate",
+    "drivers":["Rohstoff", "Energie", "Chemie", "Wasser"],
+    "insight":"Der Wechsel von Frischfaser auf Recyclingfaser und von fossiler Dampferzeugung auf Biomasse senkt den produktbezogenen CO₂-Beitrag deutlich."
+  },
+  "water": {
+    "measures":[
+      "Scheibenfilter in der Stoffaufbereitung zur Filtrat-Rückführung",
+      "Höherer Kreislaufwasseranteil statt Frischwasser",
+      "Zusätzlicher Wasserbedarf durch Streichprozess ist bilanziert"
+    ],
+    "before":12.0,
+    "after":10.18,
+    "unit":"m³/t"
+  },
+  "economics": {
+    "capexBlocks": [
+      {"name":"Biomassekraftwerk + Energieinfrastruktur", "value":99.0, "unit":"Mio. €"},
+      {"name":"Papiermaschine Umbau + Slot-Die-Coater", "value":68.0, "unit":"Mio. €"},
+      {"name":"Stoffaufbereitung inkl. Recyclinglinie", "value":34.0, "unit":"Mio. €"},
+      {"name":"Wasser-/Abwasser- und Peripheriesysteme", "value":20.0, "unit":"Mio. €"}
+    ],
+    "opexCompare": [
+      {"label":"Brennstoff/Fremdenergie", "bestand":"hoch", "umbau":"niedriger durch Biomasse + Eigenerzeugung"},
+      {"label":"CO₂-Kostenrisiko", "bestand":"hoch (fossile Abhängigkeit)", "umbau":"deutlich reduziert"},
+      {"label":"Rohstoffkosten", "bestand":"frischfaserlastig", "umbau":"recyclingfaserbasiert"},
+      {"label":"Wasser-/Abwasserkosten", "bestand":"höher", "umbau":"reduziert durch Filtratnutzung"}
+    ],
+    "logic":"Investition wird über höheren Ausstoß, höherwertige Produktfunktion und geringere Strukturkosten im Betrieb getragen."
+  },
+  "details": {
+    "biomasse": {
+      "title":"Biomassekraftwerk",
+      "system":"Bereitstellung von Prozessdampf und elektrischer Eigenversorgung für PM und Peripherie.",
+      "change":"Ablösung fossil geprägter Energiebereitstellung durch Biomassefeuerung (Konzept 1).",
+      "sustainability":"Signifikante Reduktion energiebezogener CO₂-Emissionen.",
+      "economy":"Reduzierte Volatilität bei Energiekosten und geringeres CO₂-Preisrisiko.",
+      "image":"Umbau_Grundstücksplan .png"
+    },
+    "papiermaschine": {
+      "title":"Papiermaschine",
+      "system":"Kernprozess zur Herstellung und Veredelung des Spezialpapiers.",
+      "change":"Geschwindigkeit 1.215 auf 1.488 m/min, integrierter Slot-Die-Coating-Prozess.",
+      "sustainability":"Weniger spezifische Energie pro Tonne, gezielter Chemieeinsatz im Strich.",
+      "economy":"Mehr Ausstoß pro Zeiteinheit und höherwertiges Produktportfolio.",
+      "image":"Papiermaschine_Umbau.png",
+      "imageAlt":"Papiermaschine_Bestand.png"
+    },
+    "stoffaufbereitung": {
+      "title":"Stoffaufbereitung",
+      "system":"Aufbereitung des Faserstoffs inklusive Kreislauf- und Rejektmanagement.",
+      "change":"Umstellung auf Recyclingfaser mit zusätzlicher Aufbereitungskapazität.",
+      "sustainability":"Frischfaserersatz und Wasserreduktion über Filtratkreisläufe.",
+      "economy":"Rohstoffkostenstruktur robuster gegenüber Primärfaserpreisen.",
+      "image":"Stoffaufbereitung_Umbau.png",
+      "imageAlt":"Stoffaufbereitung_Bestand.png"
+    },
+    "infrastruktur": {
+      "title":"Infrastruktur",
+      "system":"Werklogistik, Wasser, Medien und Versorgung als verbindende Ebene.",
+      "change":"IST/SOLL-Flächenneuordnung, neue Medienführung und Prozesskopplung.",
+      "sustainability":"Geringere Verteilverluste, bessere Nutzung interner Stoff- und Energieströme.",
+      "economy":"Höhere Betriebsstabilität und weniger ungeplante Stillstände.",
+      "image":"Bestand_Grundstücksplan.png",
+      "imageAlt":"Umbau_Grundstücksplan .png"
+    }
+  }
+}
